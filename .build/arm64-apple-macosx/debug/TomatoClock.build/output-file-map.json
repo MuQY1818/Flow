@@ -1,0 +1,75 @@
+{
+  "": {
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/master.swiftdeps"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/FocusSession.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/FocusSession.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/FocusSession.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/FocusSession~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/FocusSession.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/FocusSession.dia"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/MenuBarManager.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarManager.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarManager.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarManager.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarManager.dia"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/TimerManager.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TimerManager.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TimerManager.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TimerManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TimerManager.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TimerManager.dia"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/TomatoClockApp.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TomatoClockApp.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TomatoClockApp.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TomatoClockApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TomatoClockApp.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/TomatoClockApp.dia"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/CircularProgressView.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/CircularProgressView.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/CircularProgressView.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/CircularProgressView~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/CircularProgressView.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/CircularProgressView.dia"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContentView.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContentView.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContentView.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContentView.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContentView.dia"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContributionGraphView.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContributionGraphView.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContributionGraphView.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContributionGraphView~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContributionGraphView.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ContributionGraphView.dia"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/MenuBarIconView.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarIconView.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarIconView.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarIconView~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarIconView.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/MenuBarIconView.dia"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ReportView.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ReportView.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ReportView.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ReportView~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ReportView.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/ReportView.dia"
+  },
+  "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/SettingsView.swift": {
+    "dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/SettingsView.d",
+    "object": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/SettingsView.swift.o",
+    "swiftmodule": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/SettingsView~partial.swiftmodule",
+    "swift-dependencies": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/SettingsView.swiftdeps",
+    "diagnostics": "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/debug/TomatoClock.build/SettingsView.dia"
+  }
+}
