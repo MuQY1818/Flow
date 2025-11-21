@@ -26,7 +26,7 @@ struct ContentView: View {
                                 Text(tab)
                                     .font(.system(size: 13, weight: .medium))
                                     .foregroundColor(selectedTab == tab ? .white : .gray)
-                                    .frame(width: 80, height: 28) // Fixed dimensions
+                                    .frame(width: 80, height: 28)
                                     .background {
                                         if selectedTab == tab {
                                             RoundedRectangle(cornerRadius: 8)
@@ -172,7 +172,7 @@ struct TimerView: View {
                 } label: {
                     HStack {
                         Image(systemName: timerManager.state == .running ? "pause.fill" : "play.fill")
-                        Text(timerManager.state == .running ? "Pause Focus" : "Start Focus")
+                        Text(timerManager.state == .running ? "Pause \(timerManager.mode.rawValue)" : "Start \(timerManager.mode.rawValue)")
                     }
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.black)
@@ -183,9 +183,25 @@ struct TimerView: View {
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 30)
-                .padding(.bottom, 40)
+                
+                if timerManager.mode != .focus {
+                    Button {
+                        timerManager.skip()
+                    } label: {
+                        Text("Skip \(timerManager.mode.rawValue)")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.gray)
+                            .padding(.horizontal, 18)
+                            .padding(.vertical, 6)
+                            .background(Color(white: 0.15))
+                            .cornerRadius(14)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 10)
+                }
                 
                 Spacer()
+            
             }
             
             // Settings Button (Corner)
@@ -213,6 +229,7 @@ struct StatsView: View {
         // Find start of current week (Sunday)
         return calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today))!
     }()
+    @State private var hoveredSummary: ContributionGraphView.CellStat? = nil
     
     var body: some View {
         VStack(spacing: 10) {
@@ -248,25 +265,27 @@ struct StatsView: View {
             
             // Total Focus
             VStack(spacing: 2) {
-                Text("TOTAL FOCUS")
+                Text(hoveredSummary?.title.uppercased() ?? "TOTAL FOCUS")
                     .font(.caption)
                     .fontWeight(.bold)
                     .foregroundColor(.gray)
                     .tracking(1)
+                    .animation(.easeInOut(duration: 0.25), value: hoveredSummary?.id)
                 
-                Text(totalFocusTime)
-                    .font(.system(size: 52, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
+                FocusTimeDisplay(components: displayedDuration.focusTimeComponents())
             }
             .padding(.vertical, 5)
             
             // Heatmap
-            ContributionGraphView(weekStart: currentWeekStart)
+            ContributionGraphView(weekStart: currentWeekStart, hoveredSummary: $hoveredSummary)
                 .frame(height: 120)
             
             Spacer()
         }
         .padding(.bottom, 10)
+        .onChange(of: currentWeekStart) { _ in
+            hoveredSummary = nil
+        }
     }
     
     func moveWeek(by weeks: Int) {
@@ -287,7 +306,11 @@ struct StatsView: View {
         return "\(formatter.string(from: currentWeekStart)) - \(formatter.string(from: endOfWeek))"
     }
     
-    var totalFocusTime: String {
+    var displayedDuration: TimeInterval {
+        hoveredSummary?.duration ?? totalDuration
+    }
+    
+    var totalDuration: TimeInterval {
         // Filter sessions for the displayed week
         let calendar = Calendar.current
         let endOfWeek = calendar.date(byAdding: .day, value: 6, to: currentWeekStart)!
@@ -298,10 +321,55 @@ struct StatsView: View {
             session.date >= currentWeekStart && session.date <= endOfDay
         }
         
-        let totalSeconds = sessionsInWeek.reduce(0) { $0 + $1.duration }
-        let hours = Int(totalSeconds) / 3600
-        let minutes = (Int(totalSeconds) % 3600) / 60
-        return "\(hours)h \(minutes)m"
+        return sessionsInWeek.reduce(0) { $0 + $1.duration }
+    }
+}
+
+struct FocusTimeDisplay: View {
+    let components: FocusTimeComponents
+    
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 10) {
+            AnimatedTimeNumber(value: components.hours)
+            Text("h")
+                .font(.system(size: 52, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+            AnimatedTimeNumber(value: components.minutes, padToTwoDigits: true)
+            Text("m")
+                .font(.system(size: 52, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+        }
+    }
+}
+
+struct AnimatedTimeNumber: View {
+    let value: Int
+    var padToTwoDigits: Bool = false
+    
+    var body: some View {
+        Text(formattedValue)
+            .font(.system(size: 52, weight: .bold, design: .rounded))
+            .foregroundColor(.white)
+            .monospacedDigit()
+            .animation(.spring(response: 0.45, dampingFraction: 0.8), value: value)
+    }
+    
+    private var formattedValue: String {
+        padToTwoDigits ? String(format: "%02d", value) : "\(value)"
+    }
+}
+
+struct FocusTimeComponents: Equatable {
+    let hours: Int
+    let minutes: Int
+}
+
+extension TimeInterval {
+    func focusTimeComponents() -> FocusTimeComponents {
+        let totalSeconds = max(0, Int(self.rounded()))
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        return FocusTimeComponents(hours: hours, minutes: minutes)
     }
 }
 

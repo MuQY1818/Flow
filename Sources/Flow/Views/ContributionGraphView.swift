@@ -5,13 +5,21 @@ struct ContributionGraphView: View {
     
     // The start date of the week to display
     var weekStart: Date
+    @Binding var hoveredSummary: CellStat?
     
     let rows = 3 // Morning, Afternoon, Evening
     let columns = 7 // Days in a week
     let spacing: CGFloat = 4
     
-    @State private var hoveredCell: (count: Int, date: Date, timeOfDay: TimeOfDay, frame: CGRect)? = nil
+    @State private var hoveredIndex: (col: Int, row: Int)? = nil
+    @State private var tooltipFrame: CGRect? = nil
     @State private var gridCounts: [[Int]] = Array(repeating: Array(repeating: 0, count: 3), count: 7)
+    @State private var gridDurations: [[TimeInterval]] = Array(repeating: Array(repeating: 0, count: 3), count: 7)
+    private static let cellDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d"
+        return formatter
+    }()
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -24,17 +32,34 @@ struct ContributionGraphView: View {
                             ForEach(0..<rows, id: \.self) { row in
                                 let cellDate = dateFor(col: col)
                                 let timeOfDay = TimeOfDay(rawValue: row)!
-                                // Use pre-calculated count
+                                // Use pre-calculated count & duration
                                 let count = gridCounts[col][row]
+                                let duration = gridDurations[col][row]
                                 
                                 GeometryReader { geo in
                                     RoundedRectangle(cornerRadius: 3)
                                         .fill(colorFor(count: count))
                                         .onHover { isHovering in
+                                            let frame = geo.frame(in: .named("GraphSpace"))
                                             if isHovering {
-                                                hoveredCell = (count, cellDate, timeOfDay, geo.frame(in: .named("GraphSpace")))
-                                            } else if hoveredCell?.frame == geo.frame(in: .named("GraphSpace")) {
-                                                hoveredCell = nil
+                                                tooltipFrame = frame
+                                                hoveredIndex = (col, row)
+                                                let stat = CellStat(date: cellDate, timeOfDay: timeOfDay, count: count, duration: duration)
+                                                if stat.duration > 0 {
+                                                    withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                                                        hoveredSummary = stat
+                                                    }
+                                                } else if hoveredSummary != nil {
+                                                    withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                                                        hoveredSummary = nil
+                                                    }
+                                                }
+                                            } else if hoveredIndex?.col == col && hoveredIndex?.row == row {
+                                                tooltipFrame = nil
+                                                hoveredIndex = nil
+                                                withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                                                    hoveredSummary = nil
+                                                }
                                             }
                                         }
                                 }
@@ -60,21 +85,29 @@ struct ContributionGraphView: View {
             .padding(.horizontal)
             
             // Tooltip Overlay
-            if let hover = hoveredCell {
-                TooltipView(count: hover.count, date: hover.date, timeOfDay: hover.timeOfDay)
-                    .position(x: hover.frame.midX, y: hover.frame.minY - 20)
+            if let hoveredIndex = hoveredIndex,
+               let frame = tooltipFrame {
+                let stat = statFor(col: hoveredIndex.col, row: hoveredIndex.row)
+                TooltipView(stat: stat)
+                    .position(x: frame.midX, y: frame.minY - 20)
                     .transition(.opacity)
-                    .animation(.easeOut(duration: 0.1), value: hover.frame) // Smooth tooltip movement
+                    .animation(.easeOut(duration: 0.15), value: tooltipFrame)
             }
         }
         .onAppear { calculateGridData(start: weekStart) }
-        .onChange(of: weekStart) { newValue in calculateGridData(start: newValue) }
+        .onChange(of: weekStart) { newValue in
+            hoveredIndex = nil
+            tooltipFrame = nil
+            hoveredSummary = nil
+            calculateGridData(start: newValue)
+        }
         .onChange(of: timerManager.sessions.count) { _ in calculateGridData(start: weekStart) }
     }
     
     private func calculateGridData(start: Date) {
         // Initialize empty grid
-        var newGrid = Array(repeating: Array(repeating: 0, count: 3), count: 7)
+        var newGridCounts = Array(repeating: Array(repeating: 0, count: 3), count: 7)
+        var newGridDurations = Array(repeating: Array(repeating: 0.0, count: 3), count: 7)
         let calendar = Calendar.current
         
         // Filter sessions to only those in the current week view
@@ -88,11 +121,17 @@ struct ContributionGraphView: View {
             if let dayOffset = dayComponent.day, dayOffset >= 0 && dayOffset < 7 {
                 // Find row (time of day)
                 let row = TimeOfDay.from(date: session.date).rawValue
-                newGrid[dayOffset][row] += 1
+                newGridCounts[dayOffset][row] += 1
+                newGridDurations[dayOffset][row] += session.duration
             }
         }
         
-        self.gridCounts = newGrid
+        self.gridCounts = newGridCounts
+        self.gridDurations = newGridDurations
+        if let hoveredIndex = hoveredIndex {
+            let stat = statFor(col: hoveredIndex.col, row: hoveredIndex.row)
+            hoveredSummary = stat
+        }
     }
     
     enum TimeOfDay: Int {
@@ -123,12 +162,21 @@ struct ContributionGraphView: View {
         return calendar.date(byAdding: .day, value: col, to: weekStart) ?? weekStart
     }
     
+
     func countFor(date: Date, timeOfDay: TimeOfDay) -> Int {
         let calendar = Calendar.current
         return timerManager.sessions.filter { session in
             guard calendar.isDate(session.date, inSameDayAs: date) else { return false }
             return TimeOfDay.from(date: session.date) == timeOfDay
         }.count
+    }
+
+    private func statFor(col: Int, row: Int) -> CellStat {
+        let cellDate = dateFor(col: col)
+        let timeOfDay = TimeOfDay(rawValue: row) ?? .morning
+        let count = gridCounts[col][row]
+        let duration = gridDurations[col][row]
+        return CellStat(date: cellDate, timeOfDay: timeOfDay, count: count, duration: duration)
     }
     
     func colorFor(count: Int) -> Color {
@@ -147,17 +195,18 @@ struct ContributionGraphView: View {
 }
 
 struct TooltipView: View {
-    let count: Int
-    let date: Date
-    let timeOfDay: ContributionGraphView.TimeOfDay
+    let stat: ContributionGraphView.CellStat
     
     var body: some View {
-        VStack(spacing: 2) {
-            Text("\(count) sessions")
+        VStack(spacing: 3) {
+            Text("\(stat.count) sessions")
                 .font(.caption)
                 .fontWeight(.bold)
-            Text("\(dateFormatted(date)) - \(timeOfDay.label)")
+            Text(stat.title)
                 .font(.caption2)
+            Text(stat.duration.focusTimeString())
+                .font(.caption2)
+                .foregroundColor(.green)
         }
         .padding(6)
         .background(Color.black.opacity(0.9))
@@ -166,10 +215,32 @@ struct TooltipView: View {
         .foregroundColor(.white)
         .shadow(radius: 4)
     }
-    
-    func dateFormatted(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d"
-        return formatter.string(from: date)
+}
+
+extension ContributionGraphView {
+    struct CellStat: Identifiable, Equatable {
+        let date: Date
+        let timeOfDay: TimeOfDay
+        let count: Int
+        let duration: TimeInterval
+        
+        var id: String {
+            let dayStart = Calendar.current.startOfDay(for: date)
+            return "\(dayStart.timeIntervalSince1970)-\(timeOfDay.rawValue)"
+        }
+        
+        var title: String {
+            let formatter = ContributionGraphView.cellDateFormatter
+            return "\(formatter.string(from: date)) - \(timeOfDay.label)"
+        }
+    }
+}
+
+extension TimeInterval {
+    func focusTimeString() -> String {
+        let totalSeconds = max(0, Int(self.rounded()))
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        return "\(hours)h \(minutes)m"
     }
 }

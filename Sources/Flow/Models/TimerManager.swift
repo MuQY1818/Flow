@@ -34,6 +34,7 @@ class TimerManager: ObservableObject {
     
     private var timer: AnyCancellable?
     private var endDate: Date?
+    private var completedFocusSessions: Int = 0
     
     var formattedTime: String {
         let minutes = Int(timeRemaining) / 60
@@ -87,12 +88,16 @@ class TimerManager: ObservableObject {
         }
     }
     
-    func currentDuration() -> TimeInterval {
+    func duration(for mode: TimerMode) -> TimeInterval {
         switch mode {
         case .focus: return TimeInterval(focusDuration * 60)
         case .shortBreak: return TimeInterval(shortBreakDuration * 60)
         case .longBreak: return TimeInterval(longBreakDuration * 60)
         }
+    }
+    
+    func currentDuration() -> TimeInterval {
+        duration(for: mode)
     }
     
     func start() {
@@ -120,11 +125,16 @@ class TimerManager: ObservableObject {
         state = .idle
         timeRemaining = currentDuration()
         progress = 1.0
+        endDate = nil
     }
     
     func skip() {
-        reset()
-        // Cycle modes logic could go here, for now just reset
+        timer?.cancel()
+        if mode == .focus {
+            reset()
+        } else {
+            transition(to: .focus, autoStart: true)
+        }
     }
     
     func setMode(_ newMode: TimerMode) {
@@ -157,11 +167,28 @@ class TimerManager: ObservableObject {
     }
     
     private func completeTimer() {
-        saveSession()
+        timer?.cancel()
+        switch mode {
+        case .focus:
+            saveSession()
+            completedFocusSessions += 1
+            sendNotification()
+            playSound()
+            let nextMode: TimerMode = completedFocusSessions % 2 == 0 ? .longBreak : .shortBreak
+            transition(to: nextMode, autoStart: true)
+        case .shortBreak, .longBreak:
+            sendNotification()
+            playSound()
+            transition(to: .focus, autoStart: true)
+        }
+    }
+
+    private func transition(to newMode: TimerMode, autoStart: Bool) {
+        mode = newMode
         reset()
-        sendNotification()
-        playSound()
-        // Auto-switch mode logic could go here
+        if autoStart {
+            start()
+        }
     }
     
     private func playSound() {
