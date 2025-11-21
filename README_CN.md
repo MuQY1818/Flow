@@ -20,7 +20,7 @@ Flow 是一个极简主义的番茄钟应用，旨在帮助你进入心流状态
 
 ## 📥 安装指南
 
-1.  从 [Releases](https://github.com/weijue/TomatoClock/releases) 页面下载最新的 `.dmg` 文件。
+1.  从 [Releases](https://github.com/MuQY1818/Flow/releases) 页面下载最新的 `.dmg` 文件。
 2.  打开 `Flow.dmg`。
 3.  将 `Flow.app` 拖入 `Applications` 文件夹。
 4.  开启你的心流之旅！
@@ -36,7 +36,7 @@ Flow 是一个极简主义的番茄钟应用，旨在帮助你进入心流状态
 
 ```bash
 # 克隆仓库
-git clone https://github.com/weijue/TomatoClock.git
+git clone https://github.com/MuQY1818/Flow.git
 
 # 构建项目
 swift build -c release
