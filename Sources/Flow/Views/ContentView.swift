@@ -150,11 +150,9 @@ struct TimerView: View {
                 .menuStyle(.borderlessButton)
                 .padding(.bottom, 20)
                 
-                // Status Text
-                Text(timerManager.mode == .focus ? "Ready to Flow" : "Take a Break")
-                    .font(.system(size: 14, weight: .bold, design: .monospaced))
-                    .foregroundColor(Color(red: 0.4, green: 0.8, blue: 0.5)) // Matrix Green
-                    .opacity(0.9)
+                // Status Text with Flow Animation
+                FlowText(text: timerManager.mode == .focus ? "Ready to Flow" : "Take a Break", 
+                         isFlowing: timerManager.state == .running)
                     .padding(.bottom, 12)
                 
                 // Timer Display
@@ -304,5 +302,41 @@ struct StatsView: View {
         let hours = Int(totalSeconds) / 3600
         let minutes = (Int(totalSeconds) % 3600) / 60
         return "\(hours)h \(minutes)m"
+    }
+}
+
+struct FlowText: View {
+    let text: String
+    let isFlowing: Bool
+    @State private var phase: CGFloat = 0
+    
+    var body: some View {
+        ZStack {
+            Text(text)
+                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .foregroundColor(Color(red: 0.4, green: 0.8, blue: 0.5)) // Matrix Green
+            
+            // Shimmer Overlay
+            Text(text)
+                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .foregroundColor(.white)
+                .opacity(0.5)
+                .mask(
+                    GeometryReader { geo in
+                        LinearGradient(
+                            gradient: Gradient(colors: [.clear, .white, .clear]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                        .frame(width: geo.size.width / 2)
+                        .offset(x: phase * geo.size.width * 3 - geo.size.width)
+                    }
+                )
+        }
+        .onAppear {
+            withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) {
+                phase = 1
+            }
+        }
     }
 }

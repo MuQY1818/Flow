@@ -2,14 +2,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "TomatoClock",
+    name: "Flow",
     platforms: [
         .macOS(.v13)
     ],
     targets: [
         .executableTarget(
-            name: "TomatoClock",
-            path: "Sources/TomatoClock"
+            name: "Flow",
+            path: "Sources/Flow"
         )
     ]
 )

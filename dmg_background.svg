@@ -1,0 +1,31 @@
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="600" height="400" fill="#1C1C1E"/>
+    
+    <!-- Arrow Container -->
+    <g transform="translate(0, -20)">
+        <!-- Arrow Path -->
+        <path d="M 220 200 L 340 200" stroke="url(#arrow_gradient)" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 8"/>
+        
+        <!-- Arrow Head -->
+        <path d="M 330 190 L 340 200 L 330 210" stroke="url(#arrow_gradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        
+        <!-- Flow Circle Effect around Arrow -->
+        <circle cx="280" cy="200" r="30" stroke="white" stroke-opacity="0.1" stroke-width="1"/>
+        <circle cx="280" cy="200" r="50" stroke="white" stroke-opacity="0.05" stroke-width="1"/>
+        
+        <!-- Text -->
+        <text x="280" y="240" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" fill="#8E8E93" text-anchor="middle" font-weight="500" letter-spacing="1">DRAG TO INSTALL</text>
+    </g>
+    
+    <!-- Icon Placeholders (Visual Guide, not rendered) -->
+    <!-- App Icon will be at ~140, 200 -->
+    <!-- Applications Folder will be at ~460, 200 -->
+    
+    <defs>
+        <linearGradient id="arrow_gradient" x1="220" y1="200" x2="340" y2="200" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#32D74B" stop-opacity="0.5"/>
+            <stop offset="1" stop-color="#32D74B"/>
+        </linearGradient>
+    </defs>
+</svg>

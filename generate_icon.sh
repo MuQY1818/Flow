@@ -1,21 +1,21 @@
 #!/bin/bash
 
-ICON_SRC="logo_v2.svg.png"
-ICONSET_DIR="TomatoClock.iconset"
+ICON_SRC="figures/logo.jpeg"
+ICONSET_DIR="Flow.iconset"
 mkdir -p "$ICONSET_DIR"
 
 # Helper function to resize
 resize() {
     size=$1
     out="$ICONSET_DIR/icon_${size}x${size}.png"
-    sips -z $size $size "$ICON_SRC" --out "$out"
+    sips -z $size $size -s format png "$ICON_SRC" --out "$out"
 }
 
 resize_2x() {
     size=$1
     doubled=$((size * 2))
     out="$ICONSET_DIR/icon_${size}x${size}@2x.png"
-    sips -z $doubled $doubled "$ICON_SRC" --out "$out"
+    sips -z $doubled $doubled -s format png "$ICON_SRC" --out "$out"
 }
 
 echo "Resizing icons..."

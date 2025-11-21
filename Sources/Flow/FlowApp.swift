@@ -26,7 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 @main
-struct TomatoClockApp: App {
+struct FlowApp: App {
     // Use NSApplicationDelegateAdaptor to integrate AppDelegate into the SwiftUI App lifecycle.
     // This allows AppDelegate to manage the NSStatusItem and other AppKit-specific tasks.
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
