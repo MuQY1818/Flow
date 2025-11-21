@@ -17,12 +17,12 @@ Flow is a minimalist Pomodoro timer designed to help you achieve flow state and 
 
 ## 📥 Installation / 安装
 
-1.  Download the latest `.dmg` file from the [Releases](https://github.com/weijue/TomatoClock/releases) page.
+1.  Download the latest `.dmg` file from the [Releases](https://github.com/muqy1818/Flow/releases) page.
 2.  Open `Flow.dmg`.
 3.  Drag `Flow.app` into the `Applications` folder.
 4.  Start your flow journey!
 
-1.  从 [Releases](https://github.com/weijue/TomatoClock/releases) 页面下载最新的 `.dmg` 文件。
+1.  从 [Releases](https://github.com/muqy1818/Flow/releases) 页面下载最新的 `.dmg` 文件。
 2.  打开 `Flow.dmg`。
 3.  将 `Flow.app` 拖入 `Applications` 文件夹。
 4.  开启你的心流之旅！
@@ -38,7 +38,7 @@ Flow is a minimalist Pomodoro timer designed to help you achieve flow state and 
 
 ```bash
 # Clone the repository
-git clone https://github.com/weijue/TomatoClock.git
+git clone https://github.com/muqy1818/Flow.git
 
 # Build the project
 swift build -c release
