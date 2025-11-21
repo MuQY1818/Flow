@@ -56,44 +56,6 @@ class TimerManager: ObservableObject {
         requestNotificationPermission()
         loadHistory()
         loadDurations()
-        generateMockData() // Add mock data for testing
-    }
-    
-    private func generateMockData() {
-        // Only generate if empty
-        guard sessions.isEmpty else { return }
-        
-        let calendar = Calendar.current
-        let today = Date()
-        // Start of current week
-        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today))!
-        
-        var mockSessions: [FocusSession] = []
-        
-        // Generate sessions for each day of the week
-        for dayOffset in 0...6 {
-            guard let date = calendar.date(byAdding: .day, value: dayOffset, to: startOfWeek) else { continue }
-            
-            // Random number of sessions per day (0 to 5)
-            let sessionsCount = Int.random(in: 0...5)
-            
-            for _ in 0..<sessionsCount {
-                // Random time of day: Morning (9), Afternoon (14), Evening (20)
-                let hour = [9, 14, 20].randomElement()! + Int.random(in: 0...2)
-                let sessionDate = calendar.date(bySettingHour: hour, minute: Int.random(in: 0...59), second: 0, of: date)!
-                
-                // Only add if it's in the past or today
-                if sessionDate <= Date() {
-                    let duration = TimeInterval(25 * 60) // 25 mins
-                    let tag = Tag.defaults.randomElement()!
-                    mockSessions.append(FocusSession(date: sessionDate, duration: duration, tag: tag.name))
-                }
-            }
-        }
-        
-        sessions = mockSessions
-        // Don't save mock data to persistence to avoid polluting real data permanently if not desired,
-        // but for this request we'll set it to sessions.
     }
     
     private func loadHistory() {

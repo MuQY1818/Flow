@@ -1,0 +1,33 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Container (Optional, can be removed for transparency) -->
+    <rect width="1024" height="1024" rx="220" fill="#141416"/>
+    
+    <!-- Tomato Body -->
+    <circle cx="512" cy="550" r="320" fill="#FF4D4D"/>
+    <path d="M512 870C688.731 870 832 726.731 832 550C832 373.269 688.731 230 512 230C335.269 230 192 373.269 192 550C192 726.731 335.269 870 512 870Z" fill="url(#paint0_linear)"/>
+    
+    <!-- Shine/Highlight -->
+    <ellipse cx="380" cy="400" rx="60" ry="90" transform="rotate(-45 380 400)" fill="white" fill-opacity="0.15"/>
+    
+    <!-- Clock Face Elements -->
+    <!-- Clock Ring -->
+    <circle cx="512" cy="550" r="240" stroke="#3A0000" stroke-opacity="0.2" stroke-width="40"/>
+    
+    <!-- Hands -->
+    <rect x="492" y="350" width="40" height="220" rx="20" fill="white"/>
+    <rect x="512" y="530" width="160" height="40" rx="20" fill="white"/>
+    <circle cx="512" cy="550" r="30" fill="white"/>
+    
+    <!-- Stem / Leaves -->
+    <path d="M512 230C512 230 560 150 640 140C640 140 580 230 540 260" stroke="#4ADE80" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M512 230C512 230 464 150 384 140C384 140 444 230 484 260" stroke="#4ADE80" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M512 200V280" stroke="#4ADE80" stroke-width="60" stroke-linecap="round"/>
+    
+    <!-- Gradients -->
+    <defs>
+        <linearGradient id="paint0_linear" x1="512" y1="230" x2="512" y2="870" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FF5F5F"/>
+            <stop offset="1" stop-color="#CC2929"/>
+        </linearGradient>
+    </defs>
+</svg>

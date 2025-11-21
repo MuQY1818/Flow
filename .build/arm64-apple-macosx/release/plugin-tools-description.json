@@ -1,0 +1,416 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.TomatoClock-arm64-apple-macosx26.0-release.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/sources",
+      "importPath" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/FocusSession.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/MenuBarManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/TimerManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/TomatoClockApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/CircularProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContentView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContributionGraphView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/MenuBarIconView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ReportView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/SettingsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "TomatoClock",
+      "moduleOutputPath" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/Modules/TomatoClock.swiftmodule",
+      "objects" : [
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/FocusSession.swift.o",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/MenuBarManager.swift.o",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/TimerManager.swift.o",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/TomatoClockApp.swift.o",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/CircularProgressView.swift.o",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/ContentView.swift.o",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/ContributionGraphView.swift.o",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/MenuBarIconView.swift.o",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/ReportView.swift.o",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/SettingsView.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx13.0",
+        "-whole-module-optimization",
+        "-num-threads",
+        "10",
+        "-serialize-diagnostics",
+        "-O",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "TomatoClock_main",
+        "-color-diagnostics",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "tomatoclock"
+      ],
+      "outputFileMapPath" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/FocusSession.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/MenuBarManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/TimerManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/TomatoClockApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/CircularProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/ContributionGraphView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/MenuBarIconView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/ReportView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/SettingsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/Modules/TomatoClock.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/FocusSession.swift",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/MenuBarManager.swift",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/TimerManager.swift",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/TomatoClockApp.swift",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/CircularProgressView.swift",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContentView.swift",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContributionGraphView.swift",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/MenuBarIconView.swift",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ReportView.swift",
+        "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/SettingsView.swift"
+      ],
+      "tempsPath" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build",
+      "wholeModuleOptimization" : true
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "TomatoClock" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "TomatoClock",
+      "-package-name",
+      "tomatoclock",
+      "-c",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/FocusSession.swift",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/MenuBarManager.swift",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/TimerManager.swift",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/TomatoClockApp.swift",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/CircularProgressView.swift",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContentView.swift",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContributionGraphView.swift",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/MenuBarIconView.swift",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ReportView.swift",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/SettingsView.swift",
+      "-I",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/Modules",
+      "-target",
+      "arm64-apple-macosx13.0",
+      "-whole-module-optimization",
+      "-num-threads",
+      "10",
+      "-serialize-diagnostics",
+      "-O",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "TomatoClock_main",
+      "-color-diagnostics",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "tomatoclock",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "TomatoClock" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/FocusSession.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/MenuBarManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Models/TimerManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/TomatoClockApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/CircularProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContentView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ContributionGraphView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/MenuBarIconView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/ReportView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/Sources/TomatoClock/Views/SettingsView.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/sources"
+    },
+    "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/CircularProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/ContributionGraphView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/FocusSession.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/MenuBarIconView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/MenuBarManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/ReportView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/SettingsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/TimerManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.build/TomatoClockApp.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/TomatoClock.product/Objects.LinkFileList"
+    },
+    "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/weijue/Code/Project/Tomato_clock/TomatoClock/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}
