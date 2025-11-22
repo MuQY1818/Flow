@@ -35,6 +35,10 @@ struct SettingsView: View {
                 }
             }
             
+            Divider()
+            
+            Toggle("Play Sound on Completion", isOn: $timerManager.isSoundEnabled)
+            
             Spacer()
             
             HStack {
@@ -48,6 +52,6 @@ struct SettingsView: View {
             }
         }
         .padding()
-        .frame(width: 250, height: 300)
+        .frame(width: 300, height: 380)
     }
 }

@@ -32,6 +32,10 @@ class TimerManager: ObservableObject {
         didSet { saveDurations() }
     }
     
+    @Published var isSoundEnabled: Bool = true {
+        didSet { saveSettings() }
+    }
+    
     private var timer: AnyCancellable?
     private var endDate: Date?
     private var completedFocusSessions: Int = 0
@@ -75,6 +79,10 @@ class TimerManager: ObservableObject {
         
         let savedLong = defaults.integer(forKey: "longBreakDuration")
         if savedLong > 0 { longBreakDuration = savedLong }
+        
+        if defaults.object(forKey: "isSoundEnabled") != nil {
+            isSoundEnabled = defaults.bool(forKey: "isSoundEnabled")
+        }
     }
     
     private func saveDurations() {
@@ -86,6 +94,10 @@ class TimerManager: ObservableObject {
         if state == .idle {
             reset()
         }
+    }
+    
+    private func saveSettings() {
+        defaults.set(isSoundEnabled, forKey: "isSoundEnabled")
     }
     
     func duration(for mode: TimerMode) -> TimeInterval {
@@ -192,6 +204,7 @@ class TimerManager: ObservableObject {
     }
     
     private func playSound() {
+        guard isSoundEnabled else { return }
         // Use a system sound. "Glass" is a standard sound.
         if let sound = NSSound(named: "Glass") {
             sound.volume = 1.0
