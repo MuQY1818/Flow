@@ -25,6 +25,16 @@ Flow is a minimalist Pomodoro timer designed to help you achieve flow state and 
 3.  Drag `Flow.app` into the `Applications` folder.
 4.  Start your flow journey!
 
+Since this app is not signed with an Apple Developer ID (I'm an individual developer without the $99/year certificate 🥲), macOS Gatekeeper might block it. 
+
+**To fix this:**
+1.  Open `Terminal`.
+2.  Run the following command:
+    ```bash
+    sudo xattr -rd com.apple.quarantine /Applications/Flow.app
+    ```
+3.  Or simply **Right-click** the app -> Select **Open** -> Click **Open** in the dialog.
+
 ## 🚀 Usage
 
 1.  **Start Focus**: Click the "Start Focus" button. The interface will glow to indicate you are in flow mode.
