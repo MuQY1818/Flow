@@ -1,6 +1,5 @@
 import SwiftUI
 import AppKit
-import Sparkle
 
 // Assuming MenuBarManager is defined elsewhere and takes a TimerManager
 // For the purpose of this edit, we'll assume its existence and correct implementation.
