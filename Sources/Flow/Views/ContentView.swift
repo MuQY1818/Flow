@@ -269,9 +269,11 @@ struct StatsView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.gray)
                     .tracking(1)
-                    .animation(.easeInOut(duration: 0.25), value: hoveredSummary?.id)
+                    .contentTransition(.opacity)
+                    .animation(.easeInOut(duration: 0.2), value: hoveredSummary?.id)
                 
                 FocusTimeDisplay(components: displayedDuration.focusTimeComponents())
+                    .animation(.spring(response: 0.35, dampingFraction: 0.8), value: displayedDuration)
             }
             .padding(.vertical, 5)
             
@@ -350,7 +352,8 @@ struct AnimatedTimeNumber: View {
             .font(.system(size: 52, weight: .bold, design: .rounded))
             .foregroundColor(.white)
             .monospacedDigit()
-            .animation(.spring(response: 0.45, dampingFraction: 0.8), value: value)
+            .contentTransition(.numericText(countsDown: false))
+            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: value)
     }
     
     private var formattedValue: String {
