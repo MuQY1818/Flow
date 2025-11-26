@@ -6,64 +6,28 @@
         <description>Flow 番茄钟应用更新</description>
         <language>zh-cn</language>
         
-        <!-- 最新版本 -->
         <item>
             <title>Flow 1.1.0</title>
             <description>
                 <![CDATA[
-                    <h2>🎉 新功能</h2>
+                    <h2>🎉 更新内容</h2>
                     <ul>
-                        <li>✨ 新增悬浮球功能 - 黑色小球配绿色光晕</li>
-                        <li>🍅 新增紧凑模式菜单栏图标</li>
-                        <li>🔄 新增自动更新功能</li>
-                        <li>💫 悬浮球进度条流动动画效果</li>
-                    </ul>
-                    
-                    <h2>🐛 修复</h2>
-                    <ul>
-                        <li>优化菜单栏图标显示</li>
+                        <li>✨ 悬浮球快捷菜单优化</li>
+                        <li>🍅 紧凑模式菜单栏图标</li>
+                        <li>🔄 自动更新功能</li>
+                        <li>💫 流动进度条动画</li>
                     </ul>
                 ]]>
             </description>
-            <pubDate>Wed, 27 Nov 2024 12:00:00 +0800</pubDate>
-            
-            <!-- DMG 下载地址 - 替换为你的 GitHub Release 链接 -->
+            <pubDate>Wed, 26 Nov 2025 17:26:51 +0800</pubDate>
             <enclosure 
                 url="https://github.com/MuQY1818/Flow/releases/download/v1.1.0/Flow.dmg"
                 sparkle:version="2"
                 sparkle:shortVersionString="1.1.0"
-                length="1500000"
-                type="application/octet-stream"
-            />
-            
-            <!-- 最低系统要求 -->
-            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-        </item>
-        
-        <!-- 历史版本示例 -->
-        <!--
-        <item>
-            <title>Flow 1.0.0</title>
-            <description>
-                <![CDATA[
-                    <h2>🎉 初始版本</h2>
-                    <ul>
-                        <li>番茄钟计时功能</li>
-                        <li>菜单栏显示</li>
-                        <li>专注统计</li>
-                    </ul>
-                ]]>
-            </description>
-            <pubDate>Mon, 25 Nov 2024 12:00:00 +0800</pubDate>
-            <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.0.0/Flow.dmg"
-                sparkle:version="1"
-                sparkle:shortVersionString="1.0.0"
-                length="1300000"
+                length="1345311"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
         </item>
-        -->
     </channel>
 </rss>
