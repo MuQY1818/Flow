@@ -16,12 +16,24 @@ NC='\033[0m' # No Color
 # 检查参数
 if [ -z "$1" ]; then
     echo -e "${RED}错误: 请提供版本号${NC}"
-    echo "用法: ./release.sh <版本号>"
-    echo "示例: ./release.sh 1.1.0"
+    echo "用法: ./release.sh <版本号> [更新说明]"
+    echo "示例: ./release.sh 1.1.0 \"修复悬浮球显示问题\""
     exit 1
 fi
 
 VERSION="$1"
+
+# 获取更新说明
+if [ -n "$2" ]; then
+    CHANGE_LOG="$2"
+else
+    echo -e "${YELLOW}请输入本次更新内容（直接回车使用默认）:${NC}"
+    read -r CHANGE_LOG
+    if [ -z "$CHANGE_LOG" ]; then
+        CHANGE_LOG="性能优化和问题修复"
+    fi
+fi
+echo -e "${GREEN}更新说明: $CHANGE_LOG${NC}"
 APP_NAME="Flow"
 ZIP_NAME="$APP_NAME.app.zip"
 DMG_NAME="$APP_NAME.dmg"
@@ -99,12 +111,7 @@ cat > appcast.xml << EOF
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <ul>
-                        <li>✨ 悬浮球快捷菜单优化</li>
-                        <li>🍅 紧凑模式菜单栏图标</li>
-                        <li>🔄 自动更新功能</li>
-                        <li>💫 流动进度条动画</li>
-                    </ul>
+                    <p>$CHANGE_LOG</p>
                 ]]>
             </description>
             <pubDate>$RELEASE_DATE</pubDate>
@@ -137,15 +144,8 @@ echo -e "${YELLOW}[5/6] 创建 GitHub Release...${NC}"
 
 RELEASE_NOTES="## 🎉 Flow v$VERSION
 
-### 新功能
-- ✨ 悬浮倒计时小球（黑色+绿色光晕）
-- 🍅 紧凑模式菜单栏图标
-- 🔄 自动更新功能（Sparkle）
-- 💫 悬浮球快捷菜单
-
-### 改进
-- 进度条流动动画效果
-- 主界面跳过专注按钮
+### 更新内容
+$CHANGE_LOG
 
 ### 安装
 1. 下载 \`Flow.dmg\`

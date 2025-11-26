@@ -127,11 +127,6 @@ struct FloatingBallView: View {
                         Text(compactTime)
                             .font(.system(size: 18, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
-                        
-                        // Mode indicator dot
-                        Circle()
-                            .fill(modeColor)
-                            .frame(width: 6, height: 6)
                     }
                 }
                 
