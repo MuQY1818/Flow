@@ -7,7 +7,7 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.2.4</title>
+            <title>Flow 1.2.5</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
@@ -19,13 +19,13 @@
                     </ul>
                 ]]>
             </description>
-            <pubDate>Wed, 26 Nov 2025 18:04:49 +0800</pubDate>
+            <pubDate>Wed, 26 Nov 2025 18:09:53 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.2.4/Flow.app.zip"
-                sparkle:version="11"
-                sparkle:shortVersionString="1.2.4"
-                sparkle:edSignature="ymqmAlu/OZzeVu3UmSyvQWX+X1MGYGoDz5d5LG+PjMzMmIjZNKcThzXrhXIakPvse/PUz6WhkKeNYN6+GWX9Ag=="
-                length="1877466"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.2.5/Flow.app.zip"
+                sparkle:version="12"
+                sparkle:shortVersionString="1.2.5"
+                sparkle:edSignature="/If4AIK2YtS3wyERses1Y1AKBGOxJ/LRcHyBBEelAO9JfBQfozKHkMbJ++15AdpGclZ9oF85jfmuV8+oBSSnCA=="
+                length="1877471"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

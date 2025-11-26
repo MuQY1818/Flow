@@ -174,12 +174,13 @@ sudo xattr -rd com.apple.quarantine /Applications/Flow.app
 # 删除已存在的同名 release（如果有）
 gh release delete "v$VERSION" --yes 2>/dev/null || true
 
-# 创建新 release（同时上传 DMG 和 ZIP）
+# 创建新 release（同时上传 DMG、ZIP 和 appcast.xml）
 gh release create "v$VERSION" \
     --title "Flow v$VERSION" \
     --notes "$RELEASE_NOTES" \
     "$DMG_NAME" \
-    "$ZIP_NAME"
+    "$ZIP_NAME" \
+    "appcast.xml"
 
 echo -e "${GREEN}✓ GitHub Release 已创建${NC}"
 echo -e "${GREEN}  - $DMG_NAME (手动安装)${NC}"
