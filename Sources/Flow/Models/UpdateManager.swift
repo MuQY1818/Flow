@@ -84,40 +84,53 @@ class UpdateManager: NSObject, ObservableObject {
     private func performUpdate() {
         let downloadURL = "https://github.com/\(Self.githubRepo)/releases/latest/download/Flow.app.zip"
         
-        // 创建更新脚本
-        let script = """
-        #!/bin/bash
-        echo "正在下载更新..."
-        curl -sL "\(downloadURL)" -o /tmp/Flow.zip
-        echo "正在安装..."
-        unzip -oq /tmp/Flow.zip -d /tmp
-        rm -rf /Applications/Flow.app
-        mv /tmp/Flow.app /Applications/
-        rm /tmp/Flow.zip
-        echo "更新完成！正在重启..."
-        open /Applications/Flow.app
-        """
+        // 显示进度提示
+        let progressAlert = NSAlert()
+        progressAlert.messageText = "正在更新..."
+        progressAlert.informativeText = "下载并安装中，请稍候..."
+        progressAlert.alertStyle = .informational
+        progressAlert.addButton(withTitle: "后台进行")
         
-        // 保存脚本
-        let scriptPath = "/tmp/flow_update.sh"
-        try? script.write(toFile: scriptPath, atomically: true, encoding: .utf8)
-        
-        // 在终端中运行（需要用户确认）
-        let appleScript = """
-        tell application "Terminal"
-            activate
-            do script "bash \(scriptPath)"
-        end tell
-        """
-        
-        var error: NSDictionary?
-        if let scriptObject = NSAppleScript(source: appleScript) {
-            scriptObject.executeAndReturnError(&error)
+        // 在后台执行更新
+        DispatchQueue.global(qos: .userInitiated).async {
+            // 下载
+            let task = Process()
+            task.executableURL = URL(fileURLWithPath: "/bin/bash")
+            task.arguments = ["-c", """
+                curl -sL "\(downloadURL)" -o /tmp/Flow.zip && \
+                unzip -oq /tmp/Flow.zip -d /tmp && \
+                rm -rf /Applications/Flow.app && \
+                mv /tmp/Flow.app /Applications/ && \
+                rm /tmp/Flow.zip && \
+                open /Applications/Flow.app
+            """]
+            
+            do {
+                try task.run()
+                task.waitUntilExit()
+                
+                DispatchQueue.main.async {
+                    // 更新完成，退出当前应用
+                    NSApplication.shared.terminate(nil)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    let errorAlert = NSAlert()
+                    errorAlert.messageText = "更新失败"
+                    errorAlert.informativeText = "请手动下载安装：\nhttps://github.com/\(Self.githubRepo)/releases"
+                    errorAlert.alertStyle = .warning
+                    errorAlert.addButton(withTitle: "打开下载页")
+                    errorAlert.addButton(withTitle: "取消")
+                    
+                    if errorAlert.runModal() == .alertFirstButtonReturn {
+                        if let url = URL(string: "https://github.com/\(Self.githubRepo)/releases") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+                }
+            }
         }
         
-        // 退出当前应用
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            NSApplication.shared.terminate(nil)
-        }
+        progressAlert.runModal()
     }
 }
