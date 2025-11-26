@@ -26,8 +26,9 @@ class FloatingWindowController: NSObject {
     
     private func setupWindow() {
         // Create borderless, transparent window
+        // 增加高度以容纳下拉菜单
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 110, height: 110),
+            contentRect: NSRect(x: 0, y: 0, width: 160, height: 320),
             styleMask: [.borderless],
             backing: .buffered,
             defer: false
@@ -58,10 +59,15 @@ class FloatingWindowController: NSObject {
             }
         }
         
-        // Set up SwiftUI content
-        let floatingBallView = FloatingBallView(timerManager: timerManager)
+        // Set up SwiftUI content with hide callback
+        let floatingBallView = FloatingBallView(
+            timerManager: timerManager,
+            onHide: { [weak self] in
+                self?.hide()
+            }
+        )
         let hostingView = NSHostingView(rootView: floatingBallView)
-        hostingView.frame = NSRect(x: 0, y: 0, width: 110, height: 110)
+        hostingView.frame = NSRect(x: 0, y: 0, width: 160, height: 320)
         
         window.contentView = hostingView
         

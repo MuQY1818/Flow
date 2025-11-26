@@ -1,15 +1,48 @@
 import SwiftUI
+import AppKit
 
 struct FloatingBallView: View {
     @ObservedObject var timerManager: TimerManager
+    var onHide: (() -> Void)?
+    
     @State private var isExpanded = false
     @State private var isPulsing = false
     @State private var flowPhase: CGFloat = 0
+    @State private var showMenu = false
     
     private let ballSize: CGFloat = 60
     private let expandedWidth: CGFloat = 120
     
     var body: some View {
+        VStack(spacing: 0) {
+            // 悬浮球主体
+            ballView
+            
+            // 下拉菜单面板
+            if showMenu {
+                menuPanel
+                    .transition(.asymmetric(
+                        insertion: .opacity.combined(with: .scale(scale: 0.9, anchor: .top)),
+                        removal: .opacity.combined(with: .scale(scale: 0.9, anchor: .top))
+                    ))
+            }
+        }
+        .frame(width: 160, alignment: .center)  // 固定宽度防止跳动
+        .onAppear {
+            isPulsing = true
+            withAnimation(.linear(duration: 2).repeatForever(autoreverses: true)) {
+                flowPhase = 1
+            }
+        }
+        .onChange(of: timerManager.state) { newState in
+            if newState == .running {
+                isPulsing = true
+            }
+        }
+    }
+    
+    // MARK: - 悬浮球视图
+    private var ballView: some View {
         ZStack {
             // Glow effect layers
             if timerManager.state == .running {
@@ -134,8 +167,8 @@ struct FloatingBallView: View {
                         .frame(width: ballSize - 8, height: ballSize - 8)
                         .rotationEffect(.degrees(-90))
                     
-                    // Bright tip at progress end
-                    if timerManager.state == .running {
+                    // Bright tip at progress end - 只在运行中且进度<0.98时显示
+                    if timerManager.state == .running && timerManager.progress < 0.98 {
                         Circle()
                             .fill(glowColor)
                             .frame(width: 5, height: 5)
@@ -147,24 +180,100 @@ struct FloatingBallView: View {
                 .animation(.linear(duration: 0.1), value: timerManager.progress)
             }
         }
-        .frame(width: ballSize + 50, height: ballSize + 50)
-        .contentShape(Rectangle())
+        .frame(width: ballSize + 40, height: ballSize + 40)
+        .contentShape(Circle())
         .onTapGesture {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                isExpanded.toggle()
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                showMenu.toggle()
             }
         }
-        .onAppear {
-            isPulsing = true
-            // Start flow animation
-            withAnimation(.linear(duration: 2).repeatForever(autoreverses: true)) {
-                flowPhase = 1
+    }
+    
+    // MARK: - 下拉菜单面板
+    private var menuPanel: some View {
+        VStack(spacing: 0) {
+            // 连接悬浮球的小三角
+            Triangle()
+                .fill(Color(red: 0.12, green: 0.12, blue: 0.14))
+                .frame(width: 14, height: 7)
+            
+            // 菜单内容
+            VStack(spacing: 2) {
+                // 暂停/继续
+                MenuButton(
+                    icon: timerManager.state == .running ? "pause.fill" : "play.fill",
+                    title: timerManager.state == .running ? "暂停" : "继续",
+                    color: glowColor
+                ) {
+                    if timerManager.state == .running {
+                        timerManager.pause()
+                    } else {
+                        timerManager.start()
+                    }
+                    closeMenu()
+                }
+                
+                Divider().background(Color.white.opacity(0.1))
+                
+                // 跳过
+                MenuButton(
+                    icon: "forward.end.fill",
+                    title: timerManager.mode == .focus ? "跳过专注" : "跳过休息",
+                    color: .orange
+                ) {
+                    timerManager.skip()
+                    closeMenu()
+                }
+                
+                // 重置
+                MenuButton(
+                    icon: "arrow.counterclockwise",
+                    title: "重置",
+                    color: .gray
+                ) {
+                    timerManager.reset()
+                    closeMenu()
+                }
+                
+                Divider().background(Color.white.opacity(0.1))
+                
+                // 切换显示模式
+                MenuButton(
+                    icon: isExpanded ? "rectangle.compress.vertical" : "rectangle.expand.vertical",
+                    title: isExpanded ? "紧凑显示" : "展开显示",
+                    color: .blue
+                ) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        isExpanded.toggle()
+                    }
+                    closeMenu()
+                }
+                
+                // 隐藏悬浮球
+                MenuButton(
+                    icon: "eye.slash.fill",
+                    title: "隐藏",
+                    color: .red.opacity(0.8)
+                ) {
+                    closeMenu()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        onHide?()
+                    }
+                }
             }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 4)
+            .frame(width: 140)
+            .background(Color(red: 0.12, green: 0.12, blue: 0.14))
+            .cornerRadius(12)
         }
-        .onChange(of: timerManager.state) { newState in
-            if newState == .running {
-                isPulsing = true
-            }
+        .shadow(color: .black.opacity(0.4), radius: 12, x: 0, y: 6)
+        .offset(y: -8)
+    }
+    
+    private func closeMenu() {
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
+            showMenu = false
         }
     }
     
@@ -196,5 +305,54 @@ struct FloatingBallView: View {
         case .longBreak:
             return Color(red: 0.8, green: 0.5, blue: 1.0)
         }
+    }
+}
+
+// MARK: - 菜单按钮组件
+struct MenuButton: View {
+    let icon: String
+    let title: String
+    let color: Color
+    let action: () -> Void
+    
+    @State private var isHovered = false
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(color)
+                    .frame(width: 20)
+                
+                Text(title)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(.white)
+                
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(isHovered ? Color.white.opacity(0.1) : Color.clear)
+            .cornerRadius(8)
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            withAnimation(.easeInOut(duration: 0.15)) {
+                isHovered = hovering
+            }
+        }
+    }
+}
+
+// MARK: - 小三角形状
+struct Triangle: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.closeSubpath()
+        return path
     }
 }

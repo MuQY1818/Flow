@@ -184,21 +184,20 @@ struct TimerView: View {
                 .buttonStyle(.plain)
                 .padding(.horizontal, 30)
                 
-                if timerManager.mode != .focus {
-                    Button {
-                        timerManager.skip()
-                    } label: {
-                        Text("Skip \(timerManager.mode.rawValue)")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(.gray)
-                            .padding(.horizontal, 18)
-                            .padding(.vertical, 6)
-                            .background(Color(white: 0.15))
-                            .cornerRadius(14)
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.top, 10)
+                // Skip button - 始终显示
+                Button {
+                    timerManager.skip()
+                } label: {
+                    Text(timerManager.mode == .focus ? "跳过专注" : "跳过休息")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(.gray)
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 6)
+                        .background(Color(white: 0.15))
+                        .cornerRadius(14)
                 }
+                .buttonStyle(.plain)
+                .padding(.top, 10)
                 
                 Spacer()
             
