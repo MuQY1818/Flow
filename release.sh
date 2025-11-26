@@ -73,6 +73,17 @@ echo "创建 ZIP 包用于自动更新..."
 rm -f "$ZIP_NAME"
 ditto -c -k --keepParent "$APP_NAME.app" "$ZIP_NAME"
 
+# 对 ZIP 进行 EdDSA 签名
+echo "签名 ZIP 包..."
+SIGN_TOOL=".build/artifacts/sparkle/Sparkle/bin/sign_update"
+if [ -f "$SIGN_TOOL" ]; then
+    SIGNATURE=$("$SIGN_TOOL" "$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*"\(.*\)".*/\1/')
+    echo "签名: $SIGNATURE"
+else
+    SIGNATURE=""
+    echo "警告: 未找到签名工具，跳过签名"
+fi
+
 DMG_SIZE=$(ls -l "$DMG_NAME" | awk '{print $5}')
 ZIP_SIZE=$(ls -l "$ZIP_NAME" | awk '{print $5}')
 echo -e "${GREEN}✓ DMG 已创建: $DMG_NAME ($DMG_SIZE bytes)${NC}"
@@ -112,6 +123,7 @@ cat > appcast.xml << EOF
                 url="$ZIP_DOWNLOAD_URL"
                 sparkle:version="$NEW_BUILD"
                 sparkle:shortVersionString="$VERSION"
+                sparkle:edSignature="$SIGNATURE"
                 length="$ZIP_SIZE"
                 type="application/octet-stream"
             />

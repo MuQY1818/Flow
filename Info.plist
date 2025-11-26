@@ -11,9 +11,9 @@
 	<key>CFBundleName</key>
 	<string>Flow</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.2</string>
+	<string>1.1.3</string>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>5</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHighResolutionCapable</key>
@@ -25,6 +25,6 @@
 	<key>SUFeedURL</key>
 	<string>https://raw.githubusercontent.com/MuQY1818/Flow/main/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string></string>
+	<string>fjAcTFLXwbNHK8rgG6ecCzWjZIDZc/BKo0AFAYVW968=</string>
 </dict>
 </plist>
