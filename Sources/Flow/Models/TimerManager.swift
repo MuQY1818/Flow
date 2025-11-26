@@ -36,6 +36,10 @@ class TimerManager: ObservableObject {
         didSet { saveSettings() }
     }
     
+    @Published var useCompactMenuBar: Bool = true {
+        didSet { saveSettings() }
+    }
+    
     private var timer: AnyCancellable?
     private var endDate: Date?
     private var completedFocusSessions: Int = 0
@@ -83,6 +87,10 @@ class TimerManager: ObservableObject {
         if defaults.object(forKey: "isSoundEnabled") != nil {
             isSoundEnabled = defaults.bool(forKey: "isSoundEnabled")
         }
+        
+        if defaults.object(forKey: "useCompactMenuBar") != nil {
+            useCompactMenuBar = defaults.bool(forKey: "useCompactMenuBar")
+        }
     }
     
     private func saveDurations() {
@@ -98,6 +106,7 @@ class TimerManager: ObservableObject {
     
     private func saveSettings() {
         defaults.set(isSoundEnabled, forKey: "isSoundEnabled")
+        defaults.set(useCompactMenuBar, forKey: "useCompactMenuBar")
     }
     
     func duration(for mode: TimerMode) -> TimeInterval {

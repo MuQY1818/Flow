@@ -18,5 +18,15 @@
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
+    
+    <!-- Sparkle Auto-Update Configuration -->
+    <key>SUFeedURL</key>
+    <string>https://raw.githubusercontent.com/MuQY1818/Flow/main/appcast.xml</string>
+    <key>SUPublicEDKey</key>
+    <string></string>
+    <key>SUEnableAutomaticChecks</key>
+    <true/>
+    <key>SUAllowsAutomaticUpdates</key>
+    <true/>
 </dict>
 </plist>

@@ -17,6 +17,8 @@ Flow is a minimalist Pomodoro timer designed to help you achieve flow state and 
 *   **Statistics**: Detailed heatmap tracks every session, witnessing your progress.
 *   **Tag System**: Categorize tasks (Reading, Coding, Meeting, etc.) for clear time management.
 *   **Minimalist UI**: Distraction-free dark mode design, perfectly adapted for macOS.
+*   **Floating Ball**: A beautiful floating countdown ball with green glow effect.
+*   **Auto Update**: Built-in update notification with one-click update via Sparkle.
 
 ## 📥 Installation
 
@@ -41,6 +43,10 @@ Since this app is not signed with an Apple Developer ID (I'm an individual devel
 2.  **Switch Mode**: Use the top tab bar to switch between "Controls" (Timer) and "Stats" (History).
 3.  **Select Tag**: Click the tag menu above the timer to choose your current activity type.
 4.  **Settings**: Click the slider icon in the bottom right to adjust timer durations and sound preferences.
+5.  **Right-Click Menu**: Right-click the menu bar icon to:
+    - Show/Hide floating ball
+    - Switch menu bar style (compact/capsule)
+    - Check for updates
 
 ## 🛠 Development
 

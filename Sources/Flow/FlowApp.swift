@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import Sparkle
 
 // Assuming MenuBarManager is defined elsewhere and takes a TimerManager
 // For the purpose of this edit, we'll assume its existence and correct implementation.
@@ -15,13 +16,26 @@ import AppKit
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var menuBarManager: MenuBarManager?
+    var floatingWindowController: FloatingWindowController?
+    var updateManager: UpdateManager?
+    
     // The timerManager needs to be instantiated once and shared.
     // It's created here to be accessible by the AppDelegate and passed to MenuBarManager.
     let timerManager = TimerManager()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Initialize MenuBarManager, passing the shared timerManager instance.
-        menuBarManager = MenuBarManager(timerManager: timerManager)
+        // Initialize UpdateManager
+        updateManager = UpdateManager()
+        
+        // Initialize FloatingWindowController
+        floatingWindowController = FloatingWindowController(timerManager: timerManager)
+        
+        // Initialize MenuBarManager, passing the shared timerManager and floating window controller.
+        menuBarManager = MenuBarManager(
+            timerManager: timerManager,
+            floatingWindowController: floatingWindowController!,
+            updateManager: updateManager!
+        )
     }
 }
 
