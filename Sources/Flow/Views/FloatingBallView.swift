@@ -161,16 +161,6 @@ struct FloatingBallView: View {
                         )
                         .frame(width: ballSize - 8, height: ballSize - 8)
                         .rotationEffect(.degrees(-90))
-                    
-                    // Bright tip at progress end - 只在运行中且进度<0.98时显示
-                    if timerManager.state == .running && timerManager.progress < 0.98 {
-                        Circle()
-                            .fill(glowColor)
-                            .frame(width: 5, height: 5)
-                            .shadow(color: glowColor, radius: 4)
-                            .offset(y: -(ballSize - 8) / 2)
-                            .rotationEffect(.degrees(-90 + 360 * timerManager.progress))
-                    }
                 }
                 .animation(.linear(duration: 0.1), value: timerManager.progress)
             }
