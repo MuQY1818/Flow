@@ -77,7 +77,8 @@ ditto -c -k --keepParent "$APP_NAME.app" "$ZIP_NAME"
 echo "签名 ZIP 包..."
 SIGN_TOOL=".build/artifacts/sparkle/Sparkle/bin/sign_update"
 if [ -f "$SIGN_TOOL" ]; then
-    SIGNATURE=$("$SIGN_TOOL" "$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*"\(.*\)".*/\1/')
+    SIGN_OUTPUT=$("$SIGN_TOOL" "$ZIP_NAME" 2>/dev/null)
+    SIGNATURE=$(echo "$SIGN_OUTPUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
     echo "签名: $SIGNATURE"
 else
     SIGNATURE=""
