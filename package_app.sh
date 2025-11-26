@@ -24,10 +24,21 @@ echo "Creating App Bundle..."
 rm -rf "$APP_BUNDLE"
 mkdir -p "$APP_BUNDLE/Contents/MacOS"
 mkdir -p "$APP_BUNDLE/Contents/Resources"
+mkdir -p "$APP_BUNDLE/Contents/Frameworks"
 
 cp "$BUILD_DIR/$APP_NAME" "$APP_BUNDLE/Contents/MacOS/"
 cp "Info.plist" "$APP_BUNDLE/Contents/"
 cp "AppIcon.icns" "$APP_BUNDLE/Contents/Resources/"
+
+# 复制 Sparkle 框架
+SPARKLE_FRAMEWORK="$BUILD_DIR/Sparkle.framework"
+if [ -d "$SPARKLE_FRAMEWORK" ]; then
+    echo "Copying Sparkle framework..."
+    cp -R "$SPARKLE_FRAMEWORK" "$APP_BUNDLE/Contents/Frameworks/"
+    
+    # 修复 rpath
+    install_name_tool -add_rpath "@executable_path/../Frameworks" "$APP_BUNDLE/Contents/MacOS/$APP_NAME" 2>/dev/null || true
+fi
 
 echo "Preparing DMG Source..."
 rm -rf DMG_SOURCE
