@@ -37,27 +37,42 @@ struct ContributionGraphView: View {
                                 let duration = gridDurations[col][row]
                                 
                                 GeometryReader { geo in
-                                    RoundedRectangle(cornerRadius: 3)
+                                    let isHovered = hoveredIndex?.col == col && hoveredIndex?.row == row
+                                    
+                                    RoundedRectangle(cornerRadius: 4)
                                         .fill(colorFor(count: count))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 4)
+                                                .stroke(Color.white.opacity(isHovered ? 0.6 : 0), lineWidth: 1.5)
+                                        )
+                                        .scaleEffect(isHovered ? 1.15 : 1.0)
+                                        .brightness(isHovered ? 0.15 : 0)
+                                        .shadow(color: isHovered ? colorFor(count: count).opacity(0.5) : .clear, radius: 4)
+                                        .animation(.spring(response: 0.25, dampingFraction: 0.7), value: isHovered)
+                                        .zIndex(isHovered ? 1 : 0)
                                         .onHover { isHovering in
                                             let frame = geo.frame(in: .named("GraphSpace"))
                                             if isHovering {
-                                                tooltipFrame = frame
-                                                hoveredIndex = (col, row)
+                                                withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
+                                                    tooltipFrame = frame
+                                                    hoveredIndex = (col, row)
+                                                }
                                                 let stat = CellStat(date: cellDate, timeOfDay: timeOfDay, count: count, duration: duration)
                                                 if stat.duration > 0 {
-                                                    withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                                                         hoveredSummary = stat
                                                     }
                                                 } else if hoveredSummary != nil {
-                                                    withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                                                         hoveredSummary = nil
                                                     }
                                                 }
                                             } else if hoveredIndex?.col == col && hoveredIndex?.row == row {
-                                                tooltipFrame = nil
-                                                hoveredIndex = nil
-                                                withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                                                withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
+                                                    tooltipFrame = nil
+                                                    hoveredIndex = nil
+                                                }
+                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                                                     hoveredSummary = nil
                                                 }
                                             }
