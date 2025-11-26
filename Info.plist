@@ -11,9 +11,9 @@
 	<key>CFBundleName</key>
 	<string>Flow</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.2</string>
+	<string>1.2.3</string>
 	<key>CFBundleVersion</key>
-	<string>9</string>
+	<string>10</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHighResolutionCapable</key>
@@ -23,7 +23,7 @@
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/MuQY1818/Flow/main/appcast.xml</string>
+	<string>https://cdn.jsdelivr.net/gh/MuQY1818/Flow@main/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>fjAcTFLXwbNHK8rgG6ecCzWjZIDZc/BKo0AFAYVW968=</string>
 </dict>
