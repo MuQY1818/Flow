@@ -141,6 +141,7 @@ echo -e "${YELLOW}[4/6] 提交版本更新...${NC}"
 git add -A
 git commit -m "🚀 release: v$VERSION" || echo "没有需要提交的更改"
 git push origin main
+git push gitee main 2>/dev/null && echo -e "${GREEN}✓ 已同步到 Gitee${NC}" || echo "Gitee 推送跳过"
 
 echo -e "${GREEN}✓ 代码已推送${NC}"
 
