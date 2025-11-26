@@ -23,6 +23,7 @@ fi
 
 VERSION="$1"
 APP_NAME="Flow"
+ZIP_NAME="$APP_NAME.app.zip"
 DMG_NAME="$APP_NAME.dmg"
 GITHUB_REPO="MuQY1818/Flow"
 
@@ -67,14 +68,22 @@ if [ ! -f "$DMG_NAME" ]; then
     exit 1
 fi
 
+# 同时创建 ZIP（用于 Sparkle 自动更新）
+echo "创建 ZIP 包用于自动更新..."
+rm -f "$ZIP_NAME"
+ditto -c -k --keepParent "$APP_NAME.app" "$ZIP_NAME"
+
 DMG_SIZE=$(ls -l "$DMG_NAME" | awk '{print $5}')
+ZIP_SIZE=$(ls -l "$ZIP_NAME" | awk '{print $5}')
 echo -e "${GREEN}✓ DMG 已创建: $DMG_NAME ($DMG_SIZE bytes)${NC}"
+echo -e "${GREEN}✓ ZIP 已创建: $ZIP_NAME ($ZIP_SIZE bytes) - 用于自动更新${NC}"
 
 # Step 3: 更新 appcast.xml
 echo -e "${YELLOW}[3/6] 更新 appcast.xml...${NC}"
 
 RELEASE_DATE=$(date -R)
-DOWNLOAD_URL="https://github.com/$GITHUB_REPO/releases/download/v$VERSION/$DMG_NAME"
+# 使用 ZIP 作为自动更新源（Sparkle 可以自动解压替换）
+ZIP_DOWNLOAD_URL="https://github.com/$GITHUB_REPO/releases/download/v$VERSION/$ZIP_NAME"
 
 cat > appcast.xml << EOF
 <?xml version="1.0" encoding="utf-8"?>
@@ -100,10 +109,10 @@ cat > appcast.xml << EOF
             </description>
             <pubDate>$RELEASE_DATE</pubDate>
             <enclosure 
-                url="$DOWNLOAD_URL"
+                url="$ZIP_DOWNLOAD_URL"
                 sparkle:version="$NEW_BUILD"
                 sparkle:shortVersionString="$VERSION"
-                length="$DMG_SIZE"
+                length="$ZIP_SIZE"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
@@ -151,13 +160,16 @@ sudo xattr -rd com.apple.quarantine /Applications/Flow.app
 # 删除已存在的同名 release（如果有）
 gh release delete "v$VERSION" --yes 2>/dev/null || true
 
-# 创建新 release
+# 创建新 release（同时上传 DMG 和 ZIP）
 gh release create "v$VERSION" \
     --title "Flow v$VERSION" \
     --notes "$RELEASE_NOTES" \
-    "$DMG_NAME"
+    "$DMG_NAME" \
+    "$ZIP_NAME"
 
 echo -e "${GREEN}✓ GitHub Release 已创建${NC}"
+echo -e "${GREEN}  - $DMG_NAME (手动安装)${NC}"
+echo -e "${GREEN}  - $ZIP_NAME (自动更新)${NC}"
 
 # Step 6: 完成
 echo ""
