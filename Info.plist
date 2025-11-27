@@ -11,9 +11,9 @@
 	<key>CFBundleName</key>
 	<string>Flow</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5.1</string>
+	<string>1.5.2</string>
 	<key>CFBundleVersion</key>
-	<string>27</string>
+	<string>28</string>
 	<key>LSUIElement</key>
 	<false/>
 	<key>NSHighResolutionCapable</key>
