@@ -284,9 +284,8 @@ struct TimerView: View {
                 }
                 .buttonStyle(.plain)
                 .onHover { h in skipHovered = h }
-                .padding(.top, 10)
-                
-                Spacer()
+                .padding(.top, 12)
+                .padding(.bottom, 30)
             
             }
             
@@ -328,7 +327,7 @@ struct StatsView: View {
     @State private var copySuccess = false
     
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack(alignment: .topTrailing) {
             // Main Content
             VStack(spacing: 10) {
                 Spacer()
@@ -432,7 +431,8 @@ struct StatsView: View {
                 .buttonStyle(.plain)
                 .onHover { h in expandButtonHovered = h }
             }
-            .padding(20)
+            .padding(.top, 10)
+            .padding(.trailing, 20)
             
             // Share Overlay
             if showShareSheet {
@@ -447,9 +447,8 @@ struct StatsView: View {
                             sessionCount: todaySessions.count
                         )
                         .environmentObject(timerManager)
-                        .scaleEffect(0.85)
-                        .frame(width: 260 * 0.85, height: 350 * 0.85)
-                        .shadow(color: .black.opacity(0.5), radius: 20, x: 0, y: 10)
+                        .scaleEffect(0.7)
+                        .frame(width: 320 * 0.7, height: 440 * 0.7)
                         
                         HStack(spacing: 16) {
                             Button {

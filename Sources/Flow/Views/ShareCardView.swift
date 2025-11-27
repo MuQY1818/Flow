@@ -1,136 +1,216 @@
 import SwiftUI
 import CoreImage.CIFilterBuiltins
+import AppKit
 
 struct ShareCardView: View {
     @EnvironmentObject var timerManager: TimerManager
     let dailyDuration: TimeInterval
     let sessionCount: Int
     
-    private let gradientColors = [
-        Color(red: 0.1, green: 0.1, blue: 0.12),
-        Color(red: 0.05, green: 0.05, blue: 0.07)
-    ]
-    
     var body: some View {
-        VStack(spacing: 16) {
-            // Header
-            HStack {
-                Image("AppIcon") // Assuming AppIcon is available, or use system image
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                    .cornerRadius(8)
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.1), lineWidth: 1))
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Flow")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(.white)
-                    Text(Date(), style: .date)
-                        .font(.system(size: 11))
-                        .foregroundColor(.gray)
-                }
-                
-                Spacer()
-            }
-            
-            // Stats
-            VStack(spacing: 20) {
-                VStack(spacing: 4) {
-                    Text("今日专注")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.gray)
-                        .tracking(2)
-                    
-                    let components = dailyDuration.focusTimeComponents()
-                    HStack(alignment: .firstTextBaseline, spacing: 4) {
-                        Text("\(components.hours)")
-                            .font(.system(size: 56, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
-                        Text("h")
-                            .font(.system(size: 22, weight: .medium))
-                            .foregroundColor(.gray)
-                        Text("\(components.minutes)")
-                            .font(.system(size: 56, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
-                        Text("m")
-                            .font(.system(size: 22, weight: .medium))
-                            .foregroundColor(.gray)
-                    }
-                }
-                
-                HStack(spacing: 30) {
-                    VStack(spacing: 6) {
-                        Image(systemName: "flame.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(.orange)
-                        Text("\(sessionCount) 次专注")
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(.white.opacity(0.9))
-                    }
-                    
-                    VStack(spacing: 6) {
-                        Image(systemName: "target")
-                            .font(.system(size: 20))
-                            .foregroundColor(.green)
-                        Text("保持心流")
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(.white.opacity(0.9))
-                    }
-                }
-            }
-            .padding(.vertical, 10)
-            
-            Spacer()
-            
-            // Footer with QR Code
-            HStack(spacing: 12) {
-                if let qrCode = QRCodeGenerator.generate(from: "https://github.com/MuQY1818/Flow") {
-                    Image(nsImage: qrCode)
-                        .interpolation(.none)
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .cornerRadius(6)
-                        .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.white.opacity(0.1), lineWidth: 1))
-                }
-                
-                VStack(alignment: .leading, spacing: 3) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "link")
-                            .font(.system(size: 11))
-                            .foregroundColor(.blue)
-                        Text("GitHub")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.white)
-                    }
-                    Text("MuQY1818/Flow")
-                        .font(.system(size: 11))
-                        .foregroundColor(.gray)
-                    Text("扫码获取同款专注工具")
-                        .font(.system(size: 9))
-                        .foregroundColor(.gray.opacity(0.6))
-                        .padding(.top, 1)
-                }
-                
-                Spacer()
-            }
-            .padding(10)
-            .background(Color(white: 0.08))
-            .cornerRadius(10)
-        }
-        .padding(20)
-        .frame(width: 260, height: 350)
-        .background(
+        ZStack {
+            // 多层渐变背景
             LinearGradient(
-                gradient: Gradient(colors: gradientColors),
+                colors: [
+                    Color(red: 0.08, green: 0.08, blue: 0.12),
+                    Color(red: 0.04, green: 0.04, blue: 0.08)
+                ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-        )
-        .cornerRadius(16)
+            
+            // 微妙的光晕效果
+            RadialGradient(
+                colors: [
+                    Color.green.opacity(0.08),
+                    Color.clear
+                ],
+                center: .center,
+                startRadius: 20,
+                endRadius: 200
+            )
+            .offset(y: -30)
+            
+            VStack(spacing: 0) {
+                // Header
+                HStack(spacing: 12) {
+                    // App Icon
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.green.opacity(0.3), Color.blue.opacity(0.2)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 44, height: 44)
+                        
+                        Image(systemName: "leaf.fill")
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.green, .mint],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Flow")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+                        Text(formattedDate)
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.white.opacity(0.5))
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 28)
+                
+                Spacer()
+                
+                // 主要数据展示
+                VStack(spacing: 8) {
+                    Text("今日专注")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.5))
+                        .tracking(3)
+                    
+                    let components = dailyDuration.focusTimeComponents()
+                    HStack(alignment: .firstTextBaseline, spacing: 2) {
+                        Text("\(components.hours)")
+                            .font(.system(size: 72, weight: .bold, design: .rounded))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.white, .white.opacity(0.85)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                        Text("h")
+                            .font(.system(size: 28, weight: .medium))
+                            .foregroundColor(.white.opacity(0.4))
+                            .offset(y: 8)
+                        
+                        Text("\(String(format: "%02d", components.minutes))")
+                            .font(.system(size: 72, weight: .bold, design: .rounded))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.white, .white.opacity(0.85)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .padding(.leading, 4)
+                        Text("m")
+                            .font(.system(size: 28, weight: .medium))
+                            .foregroundColor(.white.opacity(0.4))
+                            .offset(y: 8)
+                    }
+                }
+                
+                // 统计徽章
+                HStack(spacing: 20) {
+                    StatBadge(icon: "flame.fill", color: .orange, value: "\(sessionCount)", label: "次专注")
+                    
+                    Rectangle()
+                        .fill(Color.white.opacity(0.1))
+                        .frame(width: 1, height: 40)
+                    
+                    StatBadge(icon: "bolt.fill", color: .yellow, value: "心流", label: "状态")
+                }
+                .padding(.top, 24)
+                
+                Spacer()
+                
+                // Footer with QR Code
+                HStack(spacing: 14) {
+                    if let qrCode = QRCodeGenerator.generate(from: "https://github.com/MuQY1818/Flow") {
+                        Image(nsImage: qrCode)
+                            .interpolation(.none)
+                            .resizable()
+                            .frame(width: 56, height: 56)
+                            .background(Color.white)
+                            .cornerRadius(8)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "chevron.left.forwardslash.chevron.right")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(.white.opacity(0.6))
+                            Text("GitHub")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                        Text("MuQY1818/Flow")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.white.opacity(0.5))
+                    }
+                    
+                    Spacer()
+                }
+                .padding(16)
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Color.white.opacity(0.05))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                        )
+                )
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
+            }
+        }
+        .frame(width: 320, height: 440)
+        .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.white.opacity(0.1), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 24)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.2), Color.white.opacity(0.05)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
         )
+        .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 10)
+    }
+    
+    private var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy年M月d日"
+        return formatter.string(from: Date())
+    }
+}
+
+// 统计徽章组件
+struct StatBadge: View {
+    let icon: String
+    let color: Color
+    let value: String
+    let label: String
+    
+    var body: some View {
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 22))
+                .foregroundColor(color)
+            
+            Text(value)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundColor(.white)
+            
+            Text(label)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundColor(.white.opacity(0.4))
+        }
     }
 }
 
@@ -141,22 +221,22 @@ struct QRCodeGenerator {
         filter.message = Data(string.utf8)
         
         if let outputImage = filter.outputImage {
-            // Scale up the image to make it sharp
-            let transform = CGAffineTransform(scaleX: 10, y: 10)
+            // Scale up the image to make it sharp (higher scale for better quality)
+            let transform = CGAffineTransform(scaleX: 20, y: 20)
             let scaledImage = outputImage.transformed(by: transform)
             
             if let cgImage = context.createCGImage(scaledImage, from: scaledImage.extent) {
-                return NSImage(cgImage: cgImage, size: NSSize(width: 200, height: 200))
+                return NSImage(cgImage: cgImage, size: NSSize(width: 400, height: 400))
             }
         }
         return nil
     }
 }
 
-// Extension to help view extraction for image generation
+// High-resolution snapshot extension
 extension View {
-    func snapshot() -> NSImage? {
-        let controller = NSHostingController(rootView: self)
+    func snapshot(scale: CGFloat = 2.0) -> NSImage? {
+        let controller = NSHostingController(rootView: self.environment(\.colorScheme, .dark))
         let view = controller.view
         
         let targetSize = controller.view.fittingSize
@@ -166,11 +246,27 @@ extension View {
         // Force layout
         view.layoutSubtreeIfNeeded()
         
-        let bitmapRep = view.bitmapImageRepForCachingDisplay(in: view.bounds)!
-        view.cacheDisplay(in: view.bounds, to: bitmapRep)
+        // Create high-resolution image
+        let scaledSize = NSSize(width: targetSize.width * scale, height: targetSize.height * scale)
+        let image = NSImage(size: scaledSize)
         
-        let image = NSImage(size: targetSize)
-        image.addRepresentation(bitmapRep)
+        image.lockFocus()
+        if let context = NSGraphicsContext.current {
+            context.imageInterpolation = .high
+            
+            // Scale the context for high DPI rendering
+            let transform = NSAffineTransform()
+            transform.scale(by: scale)
+            transform.concat()
+            
+            // Draw the view
+            if let bitmapRep = view.bitmapImageRepForCachingDisplay(in: view.bounds) {
+                view.cacheDisplay(in: view.bounds, to: bitmapRep)
+                bitmapRep.draw(in: CGRect(origin: .zero, size: targetSize))
+            }
+        }
+        image.unlockFocus()
+        
         return image
     }
 }
