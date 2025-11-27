@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.6.3</title>
+            <title>Flow 1.6.4</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>详细统计改为独立窗口显示，不再受主窗口限制</p>
+                    <p>修复切换tab时界面位移问题</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 14:38:57 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 14:44:06 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.3/Flow.app.zip"
-                sparkle:version="32"
-                sparkle:shortVersionString="1.6.3"
-                sparkle:sha256="4f9962567a81452e9fad172f081f2e14abee9277ad8277f58ea29047e781a471"
-                length="995053"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.4/Flow.app.zip"
+                sparkle:version="33"
+                sparkle:shortVersionString="1.6.4"
+                sparkle:sha256="12d5f4126e655796c6a8525b63dc9691a4d1db06a26c1a8c4e17b1f411fa8357"
+                length="994610"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

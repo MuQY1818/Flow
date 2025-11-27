@@ -62,19 +62,17 @@ struct ContentView: View {
                     .frame(height: 1)
                     .foregroundColor(Color(white: 0.15))
                 
-                // Content Area
-                ZStack {
+                // Content Area - 顶部对齐防止切换时位移
+                ZStack(alignment: .top) {
                     if selectedTab == "Controls" {
                         TimerView(showSettings: $showSettings)
-                            .transition(.move(edge: .leading).combined(with: .opacity))
-                            .zIndex(1)
+                            .transition(.opacity)
                     } else {
                         StatsView()
-                            .transition(.move(edge: .trailing).combined(with: .opacity))
-                            .zIndex(0)
+                            .transition(.opacity)
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
             
             // Settings Overlay
@@ -237,7 +235,7 @@ struct StatsView: View {
     var body: some View {
         ZStack {
         VStack(spacing: 10) {
-            Spacer()
+            Spacer().frame(height: 20)
             
             // Date Range Header
             HStack {
