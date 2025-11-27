@@ -94,8 +94,12 @@ echo -e "${GREEN}✓ ZIP 已创建: $ZIP_NAME ($ZIP_SIZE bytes) - 用于自动�
 echo -e "${YELLOW}[3/6] 更新 appcast.xml...${NC}"
 
 RELEASE_DATE=$(date -R)
-# 使用 ZIP 作为自动更新源（Sparkle 可以自动解压替换）
+# 使用 ZIP 作为自动更新源
 ZIP_DOWNLOAD_URL="https://github.com/$GITHUB_REPO/releases/download/v$VERSION/$ZIP_NAME"
+
+# 计算 ZIP 的 SHA256 哈希值（用于更新时校验完整性）
+ZIP_SHA256=$(shasum -a 256 "$ZIP_NAME" | awk '{print $1}')
+echo -e "${GREEN}✓ ZIP SHA256: ${ZIP_SHA256}${NC}"
 
 cat > appcast.xml << EOF
 <?xml version="1.0" encoding="utf-8"?>
@@ -119,6 +123,7 @@ cat > appcast.xml << EOF
                 url="$ZIP_DOWNLOAD_URL"
                 sparkle:version="$NEW_BUILD"
                 sparkle:shortVersionString="$VERSION"
+                sparkle:sha256="$ZIP_SHA256"
                 length="$ZIP_SIZE"
                 type="application/octet-stream"
             />
