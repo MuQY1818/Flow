@@ -385,6 +385,12 @@ struct StatsView: View {
     
     /// 打开独立的详细统计窗口
     func openDetailedStatsWindow() {
+        // 如果窗口已存在，直接显示
+        if let existingWindow = StatsWindowController.shared.window {
+            existingWindow.makeKeyAndOrderFront(nil)
+            return
+        }
+        
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 420, height: 600),
             styleMask: [.titled, .closable, .fullSizeContentView],
@@ -396,6 +402,7 @@ struct StatsView: View {
         window.titleVisibility = .hidden
         window.backgroundColor = NSColor(red: 0.06, green: 0.06, blue: 0.08, alpha: 1)
         window.isMovableByWindowBackground = true
+        window.isReleasedWhenClosed = false  // 防止窗口提前释放
         window.center()
         
         let hostingView = NSHostingView(
@@ -405,8 +412,8 @@ struct StatsView: View {
         window.contentView = hostingView
         window.makeKeyAndOrderFront(nil)
         
-        // 保持窗口引用
-        StatsWindowController.shared.window = window
+        // 使用控制器管理窗口
+        StatsWindowController.shared.setupWindow(window)
     }
     
     var dateRangeString: String {

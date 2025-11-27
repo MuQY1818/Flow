@@ -437,6 +437,57 @@ struct MiniStatsCard: View {
     }
 }
 
+/// 玻璃拟态统计卡片
+struct GlassStatsCard: View {
+    let icon: String
+    let iconColor: Color
+    let title: String
+    let value: String
+    let unit: String
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            // 图标
+            ZStack {
+                Circle()
+                    .fill(iconColor.opacity(0.15))
+                    .frame(width: 38, height: 38)
+                Image(systemName: icon)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(iconColor)
+            }
+            
+            // 标题
+            Text(title)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(.white.opacity(0.5))
+            
+            // 数值
+            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                Text(value)
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                if !unit.isEmpty {
+                    Text(unit)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.white.opacity(0.4))
+                }
+            }
+            .contentTransition(.numericText())
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 18)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color.white.opacity(0.04))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(Color.white.opacity(0.06), lineWidth: 1)
+                )
+        )
+    }
+}
+
 struct BarChartView: View {
     let data: [Double]
     let period: StatsPeriod
@@ -495,9 +546,19 @@ struct BarChartView: View {
 // MARK: - 独立窗口版本
 
 /// 窗口控制器（保持引用防止窗口被释放）
-class StatsWindowController {
+class StatsWindowController: NSObject, NSWindowDelegate {
     static let shared = StatsWindowController()
     var window: NSWindow?
+    
+    func windowWillClose(_ notification: Notification) {
+        // 窗口关闭时清理引用
+        window = nil
+    }
+    
+    func setupWindow(_ window: NSWindow) {
+        self.window = window
+        window.delegate = self
+    }
 }
 
 /// 独立窗口的统计视图
@@ -507,155 +568,258 @@ struct StandaloneStatsView: View {
     @State private var currentDate = Date()
     @State private var leftArrowHovered = false
     @State private var rightArrowHovered = false
+    @State private var appeared = false
     
     var body: some View {
-        VStack(spacing: 0) {
-            // 时间段选择器
-            HStack(spacing: 4) {
-                ForEach(StatsPeriod.allCases, id: \.self) { period in
-                    PeriodButton(
-                        period: period,
-                        isSelected: selectedPeriod == period
-                    ) {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                            selectedPeriod = period
+        ZStack {
+            // 渐变背景
+            LinearGradient(
+                colors: [
+                    Color(red: 0.08, green: 0.08, blue: 0.12),
+                    Color(red: 0.04, green: 0.04, blue: 0.06)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // 顶部标题区域
+                VStack(spacing: 16) {
+                    Text("专注统计")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(.white)
+                    
+                    // 时间段选择器
+                    HStack(spacing: 6) {
+                        ForEach(StatsPeriod.allCases, id: \.self) { period in
+                            PeriodButton(
+                                period: period,
+                                isSelected: selectedPeriod == period
+                            ) {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                    selectedPeriod = period
+                                }
+                            }
                         }
                     }
+                    .padding(5)
+                    .background(Color.white.opacity(0.05))
+                    .cornerRadius(14)
                 }
-            }
-            .padding(4)
-            .background(Color(white: 0.1))
-            .cornerRadius(12)
-            .padding(.horizontal, 24)
-            .padding(.top, 20)
-            
-            // 日期导航
-            HStack {
-                Button {
-                    navigateDate(by: -1)
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(leftArrowHovered ? .white : .gray)
-                        .frame(width: 32, height: 32)
-                        .background(leftArrowHovered ? Color.white.opacity(0.15) : Color.clear)
-                        .cornerRadius(8)
-                        .scaleEffect(leftArrowHovered ? 1.1 : 1.0)
-                        .animation(.easeOut(duration: 0.15), value: leftArrowHovered)
+                .padding(.horizontal, 24)
+                .padding(.top, 28)
+                .padding(.bottom, 12)
+                
+                // 日期导航
+                HStack {
+                    Button {
+                        navigateDate(by: -1)
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(leftArrowHovered ? .white : .gray)
+                            .frame(width: 36, height: 36)
+                            .background(leftArrowHovered ? Color.white.opacity(0.12) : Color.white.opacity(0.05))
+                            .cornerRadius(10)
+                            .scaleEffect(leftArrowHovered ? 1.08 : 1.0)
+                            .animation(.easeOut(duration: 0.15), value: leftArrowHovered)
+                    }
+                    .buttonStyle(.plain)
+                    .onHover { h in leftArrowHovered = h }
+                    
+                    Spacer()
+                    
+                    Text(dateRangeText)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.9))
+                    
+                    Spacer()
+                    
+                    Button {
+                        navigateDate(by: 1)
+                    } label: {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(rightArrowHovered ? .white : .gray)
+                            .frame(width: 36, height: 36)
+                            .background(rightArrowHovered ? Color.white.opacity(0.12) : Color.white.opacity(0.05))
+                            .cornerRadius(10)
+                            .scaleEffect(rightArrowHovered ? 1.08 : 1.0)
+                            .animation(.easeOut(duration: 0.15), value: rightArrowHovered)
+                    }
+                    .buttonStyle(.plain)
+                    .onHover { h in rightArrowHovered = h }
                 }
-                .buttonStyle(.plain)
-                .onHover { h in leftArrowHovered = h }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
                 
-                Spacer()
-                
-                Text(dateRangeText)
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundColor(.white)
-                
-                Spacer()
-                
-                Button {
-                    navigateDate(by: 1)
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(rightArrowHovered ? .white : .gray)
-                        .frame(width: 32, height: 32)
-                        .background(rightArrowHovered ? Color.white.opacity(0.15) : Color.clear)
-                        .cornerRadius(8)
-                        .scaleEffect(rightArrowHovered ? 1.1 : 1.0)
-                        .animation(.easeOut(duration: 0.15), value: rightArrowHovered)
-                }
-                .buttonStyle(.plain)
-                .onHover { h in rightArrowHovered = h }
-            }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 16)
-            
-            // 统计内容
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 16) {
-                    // 总时长
-                    StatsCard {
-                        VStack(spacing: 8) {
+                // 统计内容
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 16) {
+                        // 主要统计卡片 - 总时长（带渐变背景）
+                        VStack(spacing: 6) {
                             Text("总专注时长")
-                                .font(.system(size: 13))
-                                .foregroundColor(.gray)
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundColor(.white.opacity(0.6))
                             
-                            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                            HStack(alignment: .firstTextBaseline, spacing: 2) {
                                 Text("\(totalHours)")
-                                    .font(.system(size: 56, weight: .bold, design: .rounded))
-                                    .foregroundColor(.white)
+                                    .font(.system(size: 64, weight: .bold, design: .rounded))
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [.white, .white.opacity(0.8)],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
                                 Text("h")
-                                    .font(.system(size: 28, weight: .medium))
-                                    .foregroundColor(.gray)
+                                    .font(.system(size: 26, weight: .medium))
+                                    .foregroundColor(.white.opacity(0.4))
+                                    .padding(.trailing, 4)
                                 Text("\(totalMinutes)")
-                                    .font(.system(size: 56, weight: .bold, design: .rounded))
-                                    .foregroundColor(.white)
+                                    .font(.system(size: 64, weight: .bold, design: .rounded))
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [.white, .white.opacity(0.8)],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
                                 Text("m")
-                                    .font(.system(size: 28, weight: .medium))
-                                    .foregroundColor(.gray)
+                                    .font(.system(size: 26, weight: .medium))
+                                    .foregroundColor(.white.opacity(0.4))
                             }
                             .contentTransition(.numericText())
                             .animation(.spring(response: 0.4, dampingFraction: 0.8), value: totalDuration)
                         }
-                    }
-                    
-                    // 番茄钟数量
-                    HStack(spacing: 12) {
-                        MiniStatsCard(
-                            icon: "flame.fill",
-                            color: .orange,
-                            title: "番茄钟",
-                            value: "\(sessionsCount)"
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 28)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            Color.green.opacity(0.15),
+                                            Color.blue.opacity(0.1),
+                                            Color.purple.opacity(0.08)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                                )
                         )
+                        .opacity(appeared ? 1 : 0)
+                        .offset(y: appeared ? 0 : 20)
                         
-                        MiniStatsCard(
-                            icon: "clock.fill",
-                            color: .blue,
-                            title: "平均时长",
-                            value: averageDuration
-                        )
-                    }
-                    
-                    // 柱状图
-                    StatsCard {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("专注趋势")
-                                .font(.system(size: 13))
-                                .foregroundColor(.gray)
+                        // 双列统计卡片
+                        HStack(spacing: 12) {
+                            // 番茄钟数量
+                            GlassStatsCard(
+                                icon: "flame.fill",
+                                iconColor: .orange,
+                                title: "番茄钟",
+                                value: "\(sessionsCount)",
+                                unit: "个"
+                            )
+                            .opacity(appeared ? 1 : 0)
+                            .offset(y: appeared ? 0 : 20)
+                            
+                            // 平均时长
+                            GlassStatsCard(
+                                icon: "timer",
+                                iconColor: .cyan,
+                                title: "平均时长",
+                                value: averageDuration,
+                                unit: ""
+                            )
+                            .opacity(appeared ? 1 : 0)
+                            .offset(y: appeared ? 0 : 20)
+                        }
+                        
+                        // 专注趋势图
+                        VStack(alignment: .leading, spacing: 14) {
+                            HStack {
+                                Image(systemName: "chart.bar.fill")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.blue)
+                                Text("专注趋势")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.white.opacity(0.8))
+                            }
                             
                             BarChartView(data: chartData, period: selectedPeriod)
-                                .frame(height: 140)
+                                .frame(height: 130)
                         }
-                    }
-                    
-                    // 最佳时段
-                    if let bestTime = bestTimeOfDay {
-                        StatsCard {
-                            HStack {
+                        .padding(18)
+                        .background(
+                            RoundedRectangle(cornerRadius: 18)
+                                .fill(Color.white.opacity(0.04))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 18)
+                                        .stroke(Color.white.opacity(0.06), lineWidth: 1)
+                                )
+                        )
+                        .opacity(appeared ? 1 : 0)
+                        .offset(y: appeared ? 0 : 20)
+                        
+                        // 最佳时段
+                        if let bestTime = bestTimeOfDay {
+                            HStack(spacing: 16) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.yellow.opacity(0.15))
+                                        .frame(width: 50, height: 50)
+                                    Image(systemName: "star.fill")
+                                        .font(.system(size: 22))
+                                        .foregroundColor(.yellow)
+                                }
+                                
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("最佳专注时段")
-                                        .font(.system(size: 13))
-                                        .foregroundColor(.gray)
+                                        .font(.system(size: 12, weight: .medium))
+                                        .foregroundColor(.white.opacity(0.5))
                                     Text(bestTime)
-                                        .font(.system(size: 20, weight: .semibold))
-                                        .foregroundColor(.green)
+                                        .font(.system(size: 22, weight: .bold))
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                colors: [.green, .cyan],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
                                 }
+                                
                                 Spacer()
-                                Image(systemName: "star.fill")
-                                    .font(.system(size: 28))
-                                    .foregroundColor(.yellow.opacity(0.8))
                             }
+                            .padding(18)
+                            .background(
+                                RoundedRectangle(cornerRadius: 18)
+                                    .fill(Color.white.opacity(0.04))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 18)
+                                            .stroke(Color.white.opacity(0.06), lineWidth: 1)
+                                    )
+                            )
+                            .opacity(appeared ? 1 : 0)
+                            .offset(y: appeared ? 0 : 20)
                         }
                     }
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 28)
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 24)
             }
         }
-        .frame(minWidth: 400, minHeight: 550)
-        .background(Color(red: 0.06, green: 0.06, blue: 0.08))
+        .frame(minWidth: 420, minHeight: 580)
+        .onAppear {
+            withAnimation(.easeOut(duration: 0.5).delay(0.1)) {
+                appeared = true
+            }
+        }
     }
     
     // MARK: - 计算属性

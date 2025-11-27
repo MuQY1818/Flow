@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.6.9</title>
+            <title>Flow 1.7.0</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>修复悬停动画导致的崩溃问题（用 .animation() 替代 withAnimation）</p>
+                    <p>隐藏Dock图标、修复统计窗口崩溃、全新高级统计界面设计</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 15:24:23 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 21:37:25 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.9/Flow.app.zip"
-                sparkle:version="38"
-                sparkle:shortVersionString="1.6.9"
-                sparkle:sha256="7632b34b5bd69a94ca9002654b4a974f4ba42e04685eb9a24a33cf6124661536"
-                length="1005113"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.7.0/Flow.app.zip"
+                sparkle:version="39"
+                sparkle:shortVersionString="1.7.0"
+                sparkle:sha256="fb73cfaa995f0c1be1ba26e4cff16b670cd54f345ec51428ae9761a650dfce24"
+                length="1023372"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

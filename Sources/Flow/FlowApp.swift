@@ -23,6 +23,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let timerManager = TimerManager()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // 隐藏 Dock 图标（菜单栏应用）
+        NSApp.setActivationPolicy(.accessory)
+        
         // Initialize UpdateManager
         updateManager = UpdateManager()
         
