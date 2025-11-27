@@ -200,24 +200,44 @@ class UpdateManager: NSObject, ObservableObject {
                     throw UpdateError.appNotFound
                 }
                 
-                // 6. 原子替换（安全替换，失败不会丢失旧版本）
+                // 6. 移除隔离属性（防止"无法打开"错误）
+                self.updateStatus(message: "正在准备...")
+                let xattrProcess = Process()
+                xattrProcess.executableURL = URL(fileURLWithPath: "/usr/bin/xattr")
+                xattrProcess.arguments = ["-rd", "com.apple.quarantine", newAppURL.path]
+                try? xattrProcess.run()
+                xattrProcess.waitUntilExit()
+                
+                // 7. 原子替换（安全替换，失败不会丢失旧版本）
                 self.updateStatus(message: "正在安装...")
                 
                 // 使用 replaceItemAt 进行原子替换
                 _ = try FileManager.default.replaceItemAt(currentAppURL, withItemAt: newAppURL, backupItemName: nil, options: .usingNewMetadataOnly)
                 
-                // 7. 清理临时文件
+                // 8. 清理临时文件
                 try? FileManager.default.removeItem(at: zipPath)
                 try? FileManager.default.removeItem(at: extractPath)
                 
-                // 8. 启动新版本并退出当前应用
+                // 9. 启动新版本并退出当前应用
                 self.updateStatus(message: "正在重启...")
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     // 启动新版本
-                    NSWorkspace.shared.openApplication(at: currentAppURL, configuration: .init(), completionHandler: nil)
-                    // 退出当前应用
-                    NSApplication.shared.terminate(nil)
+                    let config = NSWorkspace.OpenConfiguration()
+                    config.activates = true
+                    NSWorkspace.shared.openApplication(at: currentAppURL, configuration: config) { _, error in
+                        if error != nil {
+                            // 备用方案：使用 open 命令
+                            let openProcess = Process()
+                            openProcess.executableURL = URL(fileURLWithPath: "/usr/bin/open")
+                            openProcess.arguments = [currentAppURL.path]
+                            try? openProcess.run()
+                        }
+                    }
+                    // 稍等一下再退出，确保新应用启动
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        NSApplication.shared.terminate(nil)
+                    }
                 }
                 
             } catch {
