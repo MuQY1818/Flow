@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.5.0</title>
+            <title>Flow 1.5.1</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>新功能：Dock显示 + 白噪音（白噪音/粉红噪音/棕噪音/雨声/海浪/森林）</p>
+                    <p>白噪音升级为高质量在线音源：雨声/海浪/森林/篝火/咖啡馆/夏夜虫鸣</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 14:04:45 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 14:09:53 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.5.0/Flow.app.zip"
-                sparkle:version="26"
-                sparkle:shortVersionString="1.5.0"
-                sparkle:sha256="4082ac7ef9521af42b948cc9b7f3cf4562b1b03d8212b8ffd09c4c422264d66d"
-                length="926134"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.5.1/Flow.app.zip"
+                sparkle:version="27"
+                sparkle:shortVersionString="1.5.1"
+                sparkle:sha256="3365ad33262c4d5d94677b754dc788d09326e463a144c983896165b235fd2314"
+                length="932238"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

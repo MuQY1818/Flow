@@ -58,9 +58,15 @@ struct SettingsView: View {
                     Slider(value: $noiseManager.volume, in: 0...1)
                         .frame(width: 80)
                     
-                    Image(systemName: noiseManager.isPlaying ? "speaker.wave.2.fill" : "speaker.slash")
-                        .foregroundColor(noiseManager.isPlaying ? .green : .gray)
-                        .font(.caption)
+                    if noiseManager.isLoading {
+                        ProgressView()
+                            .scaleEffect(0.6)
+                            .frame(width: 16)
+                    } else {
+                        Image(systemName: noiseManager.isPlaying ? "speaker.wave.2.fill" : "speaker.slash")
+                            .foregroundColor(noiseManager.isPlaying ? .green : .gray)
+                            .font(.caption)
+                    }
                 }
             }
             
