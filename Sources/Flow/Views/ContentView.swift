@@ -62,17 +62,19 @@ struct ContentView: View {
                     .frame(height: 1)
                     .foregroundColor(Color(white: 0.15))
                 
-                // Content Area - 顶部对齐防止切换时位移
-                ZStack(alignment: .top) {
+                // Content Area
+                ZStack {
                     if selectedTab == "Controls" {
                         TimerView(showSettings: $showSettings)
-                            .transition(.opacity)
+                            .transition(.move(edge: .leading).combined(with: .opacity))
+                            .zIndex(1)
                     } else {
                         StatsView()
-                            .transition(.opacity)
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
+                            .zIndex(0)
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
             // Settings Overlay
@@ -233,11 +235,12 @@ struct StatsView: View {
     @State private var expandButtonHovered = false
     
     var body: some View {
-        ZStack {
-        VStack(spacing: 10) {
-            Spacer().frame(height: 20)
-            
-            // Date Range Header
+        ZStack(alignment: .bottomTrailing) {
+            // Main Content
+            VStack(spacing: 10) {
+                Spacer()
+                
+                // Date Range Header
             HStack {
                 Button {
                     moveWeek(by: -1)
@@ -305,36 +308,26 @@ struct StatsView: View {
             ContributionGraphView(weekStart: currentWeekStart, hoveredSummary: $hoveredSummary)
                 .frame(height: 120)
             
-            // 展开详细统计按钮
+                Spacer()
+            }
+            
+            // 详细统计按钮（右下角）
             Button {
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                    showDetailedStats = true
-                }
+                showDetailedStats = true
             } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: "chart.bar.xaxis")
-                        .font(.system(size: 11))
-                    Text("详细统计")
-                        .font(.system(size: 11, weight: .medium))
-                }
-                .foregroundColor(expandButtonHovered ? .white : .gray)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(expandButtonHovered ? Color.green.opacity(0.3) : Color(white: 0.15))
-                .cornerRadius(14)
-                .scaleEffect(expandButtonHovered ? 1.05 : 1.0)
+                Image(systemName: "chart.bar.xaxis")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(expandButtonHovered ? .white : .gray)
+                    .frame(width: 36, height: 36)
+                    .background(expandButtonHovered ? Color.green.opacity(0.3) : Color(white: 0.15))
+                    .clipShape(Circle())
+                    .scaleEffect(expandButtonHovered ? 1.1 : 1.0)
             }
             .buttonStyle(.plain)
-            .onHover { hovering in
-                withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
-                    expandButtonHovered = hovering
-                }
+            .onHover { h in
+                withAnimation(.easeOut(duration: 0.15)) { expandButtonHovered = h }
             }
-            .padding(.top, 4)
-            
-            Spacer()
-        }
-        .padding(.bottom, 10)
+            .padding(20)
         .onChange(of: currentWeekStart) { _ in
             hoveredSummary = nil
         }
