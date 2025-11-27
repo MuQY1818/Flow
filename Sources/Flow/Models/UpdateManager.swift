@@ -2,11 +2,22 @@ import Foundation
 import AppKit
 import CryptoKit
 
-/// 自动更新管理器 - 安全版（哈希校验 + 原子替换）
+/// 自动更新管理器 - 安全版（哈希校验 + 原子替换 + 多源支持）
 class UpdateManager: NSObject, ObservableObject {
     
     static let githubRepo = "MuQY1818/Flow"
-    static let appcastURL = "https://github.com/\(githubRepo)/releases/latest/download/appcast.xml"
+    
+    static let giteeRepo = "muqyun/Flow"
+    
+    // 多源支持：GitHub（国际）+ Gitee（国内）
+    static let sources: [(name: String, appcastURL: String, downloadBaseURL: String)] = [
+        ("GitHub", "https://github.com/\(githubRepo)/releases/latest/download/appcast.xml", 
+         "https://github.com/\(githubRepo)/releases/latest/download/"),
+        ("Gitee", "https://gitee.com/\(giteeRepo)/releases/latest/download/appcast.xml",
+         "https://gitee.com/\(giteeRepo)/releases/latest/download/")
+    ]
+    
+    private var currentSourceIndex = 0
     
     @Published var updateAvailable = false
     @Published var latestVersion = ""
@@ -17,46 +28,80 @@ class UpdateManager: NSObject, ObservableObject {
     private var expectedSHA256: String?
     private var changeLog: String?
     
-    /// 检查更新
+    /// 检查更新（支持多源自动切换）
     func checkForUpdates() {
         isChecking = true
-        
-        let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
-        
-        guard let url = URL(string: Self.appcastURL) else {
-            isChecking = false
+        currentSourceIndex = 0
+        tryCheckUpdate()
+    }
+    
+    private func tryCheckUpdate() {
+        guard currentSourceIndex < Self.sources.count else {
+            DispatchQueue.main.async {
+                self.isChecking = false
+                self.showNoUpdateAlert()
+            }
             return
         }
         
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+        let source = Self.sources[currentSourceIndex]
+        let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
+        
+        guard let url = URL(string: source.appcastURL) else {
+            currentSourceIndex += 1
+            tryCheckUpdate()
+            return
+        }
+        
+        // 带超时的请求配置
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 10 // 10秒超时
+        
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            
+            // 检查是否成功
+            if let error = error {
+                print("[UpdateManager] \(source.name) 失败: \(error.localizedDescription)")
+                self.currentSourceIndex += 1
+                self.tryCheckUpdate()
+                return
+            }
+            
+            guard let data = data,
+                  let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200,
+                  let xmlString = String(data: data, encoding: .utf8) else {
+                print("[UpdateManager] \(source.name) 响应无效，尝试下一个源")
+                self.currentSourceIndex += 1
+                self.tryCheckUpdate()
+                return
+            }
+            
+            // 解析版本号
+            guard let version = self.parseXMLAttribute(xmlString, attribute: "sparkle:shortVersionString") else {
+                self.currentSourceIndex += 1
+                self.tryCheckUpdate()
+                return
+            }
+            
+            print("[UpdateManager] 使用 \(source.name) 源成功")
+            
             DispatchQueue.main.async {
-                self?.isChecking = false
-                
-                guard let data = data, error == nil,
-                      let xmlString = String(data: data, encoding: .utf8) else {
-                    self?.showNoUpdateAlert()
-                    return
-                }
-                
-                // 解析版本号
-                guard let version = self?.parseXMLAttribute(xmlString, attribute: "sparkle:shortVersionString") else {
-                    self?.showNoUpdateAlert()
-                    return
-                }
-                
-                self?.latestVersion = version
+                self.isChecking = false
+                self.latestVersion = version
                 
                 // 解析 SHA256 哈希值
-                self?.expectedSHA256 = self?.parseXMLAttribute(xmlString, attribute: "sparkle:sha256")
+                self.expectedSHA256 = self.parseXMLAttribute(xmlString, attribute: "sparkle:sha256")
                 
                 // 解析更新日志
-                self?.changeLog = self?.parseChangeLog(xmlString)
+                self.changeLog = self.parseChangeLog(xmlString)
                 
-                if self?.compareVersions(current: currentVersion, latest: version) == .orderedAscending {
-                    self?.updateAvailable = true
-                    self?.showUpdateAlert(currentVersion: currentVersion, newVersion: version)
+                if self.compareVersions(current: currentVersion, latest: version) == .orderedAscending {
+                    self.updateAvailable = true
+                    self.showUpdateAlert(currentVersion: currentVersion, newVersion: version)
                 } else {
-                    self?.showNoUpdateAlert()
+                    self.showNoUpdateAlert()
                 }
             }
         }.resume()
@@ -139,9 +184,11 @@ class UpdateManager: NSObject, ObservableObject {
         alert.runModal()
     }
     
-    /// 执行安全更新
+    /// 执行安全更新（使用当前成功的源）
     private func performUpdate() {
-        let downloadURL = "https://github.com/\(Self.githubRepo)/releases/latest/download/Flow.app.zip"
+        let source = Self.sources[currentSourceIndex]
+        let downloadURL = source.downloadBaseURL + "Flow.app.zip"
+        print("[UpdateManager] 从 \(source.name) 下载更新")
         
         // 获取当前应用路径（动态路径，不硬编码）
         let currentAppPath = Bundle.main.bundlePath

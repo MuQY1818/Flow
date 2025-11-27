@@ -38,6 +38,8 @@ APP_NAME="Flow"
 ZIP_NAME="$APP_NAME.app.zip"
 DMG_NAME="$APP_NAME.dmg"
 GITHUB_REPO="MuQY1818/Flow"
+GITEE_REPO="muqyun/Flow"
+GITEE_TOKEN="${GITEE_TOKEN:-}" # 从环境变量获取，勿硬编码
 
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}    Flow 发布脚本 v${VERSION}${NC}"
@@ -178,7 +180,56 @@ echo -e "${GREEN}✓ GitHub Release 已创建${NC}"
 echo -e "${GREEN}  - $DMG_NAME (手动安装)${NC}"
 echo -e "${GREEN}  - $ZIP_NAME (自动更新)${NC}"
 
-# Step 6: 完成
+# Step 6: 创建 Gitee Release（国内源）
+echo -e "${YELLOW}[6/7] 创建 Gitee Release（国内源）...${NC}"
+
+if [ -n "$GITEE_TOKEN" ]; then
+    # 删除已存在的 release
+    curl -s -X DELETE "https://gitee.com/api/v5/repos/$GITEE_REPO/releases/tags/v$VERSION?access_token=$GITEE_TOKEN" 2>/dev/null || true
+    
+    # 创建新的 release
+    GITEE_RELEASE_RESPONSE=$(curl -s -X POST "https://gitee.com/api/v5/repos/$GITEE_REPO/releases" \
+        -H "Content-Type: application/json" \
+        -d "{
+            \"access_token\": \"$GITEE_TOKEN\",
+            \"tag_name\": \"v$VERSION\",
+            \"name\": \"Flow v$VERSION\",
+            \"body\": \"$CHANGE_LOG\",
+            \"prerelease\": false,
+            \"target_commitish\": \"main\"
+        }")
+    
+    GITEE_RELEASE_ID=$(echo "$GITEE_RELEASE_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+    
+    if [ -n "$GITEE_RELEASE_ID" ]; then
+        # 上传 ZIP 文件
+        curl -s -X POST "https://gitee.com/api/v5/repos/$GITEE_REPO/releases/$GITEE_RELEASE_ID/attach_files" \
+            -F "access_token=$GITEE_TOKEN" \
+            -F "file=@$ZIP_NAME" > /dev/null
+        
+        # 上传 DMG 文件
+        curl -s -X POST "https://gitee.com/api/v5/repos/$GITEE_REPO/releases/$GITEE_RELEASE_ID/attach_files" \
+            -F "access_token=$GITEE_TOKEN" \
+            -F "file=@$DMG_NAME" > /dev/null
+        
+        # 上传 appcast.xml
+        curl -s -X POST "https://gitee.com/api/v5/repos/$GITEE_REPO/releases/$GITEE_RELEASE_ID/attach_files" \
+            -F "access_token=$GITEE_TOKEN" \
+            -F "file=@appcast.xml" > /dev/null
+        
+        echo -e "${GREEN}✓ Gitee Release 已创建${NC}"
+        echo -e "${GREEN}  Release: https://gitee.com/$GITEE_REPO/releases/tag/v$VERSION${NC}"
+    else
+        echo -e "${YELLOW}⚠ Gitee Release 创建失败（可能需要 Gitee 会员）${NC}"
+        echo -e "${YELLOW}  错误信息: $GITEE_RELEASE_RESPONSE${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠ 跳过 Gitee Release（未设置 GITEE_TOKEN）${NC}"
+    echo -e "${YELLOW}  设置方法: export GITEE_TOKEN=你的访问令牌${NC}"
+    echo -e "${YELLOW}  获取令牌: https://gitee.com/personal_access_tokens${NC}"
+fi
+
+# Step 7: 完成
 echo ""
 echo -e "${BLUE}========================================${NC}"
 echo -e "${GREEN}🎉 发布完成!${NC}"
