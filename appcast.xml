@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.6.5</title>
+            <title>Flow 1.6.6</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>恢复滑动动画，详细统计按钮移至右下角圆形图标</p>
+                    <p>修复热力图浮窗闪烁问题</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 14:48:59 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 15:03:55 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.5/Flow.app.zip"
-                sparkle:version="34"
-                sparkle:shortVersionString="1.6.5"
-                sparkle:sha256="602654dabf8451238bf730b9ea44e20af47c579d9533cfa1d355342220b3766b"
-                length="992944"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.6/Flow.app.zip"
+                sparkle:version="35"
+                sparkle:shortVersionString="1.6.6"
+                sparkle:sha256="cb277f77db1671ae81f57549d53bd683f1cee79b5c52c7601f5e7239e479e496"
+                length="993141"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

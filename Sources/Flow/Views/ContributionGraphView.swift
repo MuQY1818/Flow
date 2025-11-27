@@ -99,7 +99,7 @@ struct ContributionGraphView: View {
             }
             .padding(.horizontal)
             
-            // Tooltip Overlay
+            // Tooltip Overlay（鼠标穿透，防止闪烁）
             if let hoveredIndex = hoveredIndex,
                let frame = tooltipFrame {
                 let stat = statFor(col: hoveredIndex.col, row: hoveredIndex.row)
@@ -107,6 +107,7 @@ struct ContributionGraphView: View {
                     .position(x: frame.midX, y: frame.minY - 20)
                     .transition(.opacity)
                     .animation(.easeOut(duration: 0.15), value: tooltipFrame)
+                    .allowsHitTesting(false)
             }
         }
         .onAppear { calculateGridData(start: weekStart) }
