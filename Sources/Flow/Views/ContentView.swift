@@ -43,11 +43,10 @@ struct ContentView: View {
                                         }
                                     }
                                     .scaleEffect(isHovered && !isSelected ? 1.02 : 1.0)
+                                    .animation(.easeOut(duration: 0.12), value: isHovered)
                             }
                             .buttonStyle(.plain)
-                            .onHover { h in
-                                withAnimation(.easeOut(duration: 0.12)) { hoveredTab = h ? tab : nil }
-                            }
+                            .onHover { h in hoveredTab = h ? tab : nil }
                         }
                     }
                     .padding(3)
@@ -68,11 +67,10 @@ struct ContentView: View {
                             .background(quitHovered ? Color.red.opacity(0.15) : Color.clear)
                             .cornerRadius(6)
                             .scaleEffect(quitHovered ? 1.05 : 1.0)
+                            .animation(.easeOut(duration: 0.12), value: quitHovered)
                     }
                     .buttonStyle(.plain)
-                    .onHover { h in
-                        withAnimation(.easeOut(duration: 0.12)) { quitHovered = h }
-                    }
+                    .onHover { h in quitHovered = h }
                 }
                 .padding(20)
                 .frame(height: 70) // Fixed height container to prevent jumps
@@ -171,9 +169,10 @@ struct TimerView: View {
                     .background(tagHovered ? Color(white: 0.2) : Color(white: 0.15))
                     .cornerRadius(12)
                     .scaleEffect(tagHovered ? 1.05 : 1.0)
+                    .animation(.easeOut(duration: 0.12), value: tagHovered)
                 }
                 .menuStyle(.borderlessButton)
-                .onHover { h in withAnimation(.easeOut(duration: 0.12)) { tagHovered = h } }
+                .onHover { h in tagHovered = h }
                 .padding(.bottom, 20)
                 
                 // Status Text with Flow Animation
@@ -208,9 +207,10 @@ struct TimerView: View {
                     .cornerRadius(25)
                     .scaleEffect(mainButtonHovered ? 1.03 : 1.0)
                     .shadow(color: mainButtonHovered ? .white.opacity(0.3) : .clear, radius: 8)
+                    .animation(.easeOut(duration: 0.12), value: mainButtonHovered)
                 }
                 .buttonStyle(.plain)
-                .onHover { h in withAnimation(.easeOut(duration: 0.12)) { mainButtonHovered = h } }
+                .onHover { h in mainButtonHovered = h }
                 .padding(.horizontal, 30)
                 
                 // Skip button - 始终显示
@@ -225,9 +225,10 @@ struct TimerView: View {
                         .background(skipHovered ? Color(white: 0.25) : Color(white: 0.15))
                         .cornerRadius(14)
                         .scaleEffect(skipHovered ? 1.05 : 1.0)
+                        .animation(.easeOut(duration: 0.12), value: skipHovered)
                 }
                 .buttonStyle(.plain)
-                .onHover { h in withAnimation(.easeOut(duration: 0.12)) { skipHovered = h } }
+                .onHover { h in skipHovered = h }
                 .padding(.top, 10)
                 
                 Spacer()
@@ -245,9 +246,10 @@ struct TimerView: View {
                     .background(settingsHovered ? Color(white: 0.25) : Color(white: 0.15))
                     .clipShape(Circle())
                     .scaleEffect(settingsHovered ? 1.1 : 1.0)
+                    .animation(.easeOut(duration: 0.12), value: settingsHovered)
             }
             .buttonStyle(.plain)
-            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { settingsHovered = h } }
+            .onHover { h in settingsHovered = h }
             .padding(20)
         }
     }
@@ -355,11 +357,10 @@ struct StatsView: View {
                     .background(expandButtonHovered ? Color.green.opacity(0.3) : Color(white: 0.15))
                     .clipShape(Circle())
                     .scaleEffect(expandButtonHovered ? 1.1 : 1.0)
+                    .animation(.easeOut(duration: 0.15), value: expandButtonHovered)
             }
             .buttonStyle(.plain)
-            .onHover { h in
-                withAnimation(.easeOut(duration: 0.15)) { expandButtonHovered = h }
-            }
+            .onHover { h in expandButtonHovered = h }
             .padding(20)
         .onChange(of: currentWeekStart) { _ in
             hoveredSummary = nil

@@ -148,9 +148,10 @@ struct StepperControl: View {
                     .frame(width: 20, height: 20)
                     .background(minusHovered ? Color.white.opacity(0.2) : Color(white: 0.2))
                     .cornerRadius(4)
+                    .animation(.easeOut(duration: 0.15), value: minusHovered)
             }
             .buttonStyle(.plain)
-            .onHover { h in withAnimation(.easeOut(duration: 0.15)) { minusHovered = h } }
+            .onHover { h in minusHovered = h }
             
             // 数值
             Text("\(value)")
@@ -168,9 +169,10 @@ struct StepperControl: View {
                     .frame(width: 20, height: 20)
                     .background(plusHovered ? Color.white.opacity(0.2) : Color(white: 0.2))
                     .cornerRadius(4)
+                    .animation(.easeOut(duration: 0.15), value: plusHovered)
             }
             .buttonStyle(.plain)
-            .onHover { h in withAnimation(.easeOut(duration: 0.15)) { plusHovered = h } }
+            .onHover { h in plusHovered = h }
         }
     }
 }

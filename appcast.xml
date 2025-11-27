@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.6.8</title>
+            <title>Flow 1.6.9</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>所有可交互组件添加悬停动效：Tab按钮、Quit、Tag选择器、开始/暂停、跳过、设置</p>
+                    <p>修复悬停动画导致的崩溃问题（用 .animation() 替代 withAnimation）</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 15:10:44 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 15:24:23 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.8/Flow.app.zip"
-                sparkle:version="37"
-                sparkle:shortVersionString="1.6.8"
-                sparkle:sha256="10f30a2a5cf19dc6559f193c7016b89ea687302ac2557e77968eecd37fc4d81e"
-                length="1002314"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.9/Flow.app.zip"
+                sparkle:version="38"
+                sparkle:shortVersionString="1.6.9"
+                sparkle:sha256="7632b34b5bd69a94ca9002654b4a974f4ba42e04685eb9a24a33cf6124661536"
+                length="1005113"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

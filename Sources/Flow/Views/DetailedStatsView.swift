@@ -27,9 +27,10 @@ struct DetailedStatsView: View {
                         .background(closeHovered ? Color.white.opacity(0.2) : Color(white: 0.15))
                         .clipShape(Circle())
                         .scaleEffect(closeHovered ? 1.1 : 1.0)
+                        .animation(.easeOut(duration: 0.15), value: closeHovered)
                 }
                 .buttonStyle(.plain)
-                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { closeHovered = h } }
+                .onHover { h in closeHovered = h }
                 
                 Spacer()
                 
@@ -74,9 +75,10 @@ struct DetailedStatsView: View {
                         .background(leftArrowHovered ? Color.white.opacity(0.15) : Color.clear)
                         .cornerRadius(8)
                         .scaleEffect(leftArrowHovered ? 1.1 : 1.0)
+                        .animation(.easeOut(duration: 0.15), value: leftArrowHovered)
                 }
                 .buttonStyle(.plain)
-                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { leftArrowHovered = h } }
+                .onHover { h in leftArrowHovered = h }
                 
                 Spacer()
                 
@@ -96,9 +98,10 @@ struct DetailedStatsView: View {
                         .background(rightArrowHovered ? Color.white.opacity(0.15) : Color.clear)
                         .cornerRadius(8)
                         .scaleEffect(rightArrowHovered ? 1.1 : 1.0)
+                        .animation(.easeOut(duration: 0.15), value: rightArrowHovered)
                 }
                 .buttonStyle(.plain)
-                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { rightArrowHovered = h } }
+                .onHover { h in rightArrowHovered = h }
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 12)
@@ -538,9 +541,10 @@ struct StandaloneStatsView: View {
                         .background(leftArrowHovered ? Color.white.opacity(0.15) : Color.clear)
                         .cornerRadius(8)
                         .scaleEffect(leftArrowHovered ? 1.1 : 1.0)
+                        .animation(.easeOut(duration: 0.15), value: leftArrowHovered)
                 }
                 .buttonStyle(.plain)
-                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { leftArrowHovered = h } }
+                .onHover { h in leftArrowHovered = h }
                 
                 Spacer()
                 
@@ -560,9 +564,10 @@ struct StandaloneStatsView: View {
                         .background(rightArrowHovered ? Color.white.opacity(0.15) : Color.clear)
                         .cornerRadius(8)
                         .scaleEffect(rightArrowHovered ? 1.1 : 1.0)
+                        .animation(.easeOut(duration: 0.15), value: rightArrowHovered)
                 }
                 .buttonStyle(.plain)
-                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { rightArrowHovered = h } }
+                .onHover { h in rightArrowHovered = h }
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 16)
