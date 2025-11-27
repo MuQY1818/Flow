@@ -133,12 +133,62 @@ struct TimerView: View {
     @State private var mainButtonHovered = false
     @State private var skipHovered = false
     @State private var settingsHovered = false
+    @State private var isEditingGoal = false
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             // Main Content Centered
             VStack(spacing: 0) {
                 Spacer()
+                
+                // Goal Input (One Thing)
+                if timerManager.mode == .focus {
+                    ZStack {
+                        if isEditingGoal || timerManager.currentGoal.isEmpty {
+                            TextField("What's your goal?", text: $timerManager.currentGoal, onCommit: {
+                                isEditingGoal = false
+                            })
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .font(.system(size: 15, weight: .medium))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                            .frame(width: 200)
+                            .padding(.vertical, 4)
+                            .background(Color.clear)
+                            .overlay(
+                                Rectangle()
+                                    .frame(height: 1)
+                                    .foregroundColor(isEditingGoal ? .white.opacity(0.5) : .clear)
+                                    .offset(y: 10)
+                            )
+                        } else {
+                            Text(timerManager.currentGoal)
+                                .font(.system(size: 15, weight: .medium))
+                                .foregroundColor(.white.opacity(0.9))
+                                .padding(.vertical, 4)
+                                .padding(.horizontal, 12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.white.opacity(0.1))
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(
+                                            timerManager.state == .running ? Color.white.opacity(0.5) : Color.white.opacity(0.2),
+                                            lineWidth: 1
+                                        )
+                                )
+                                .shadow(color: timerManager.state == .running ? Color.white.opacity(0.3) : Color.clear, radius: 5)
+                                .onTapGesture {
+                                    if timerManager.state != .running {
+                                        isEditingGoal = true
+                                    }
+                                }
+                                .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: timerManager.state == .running)
+                        }
+                    }
+                    .padding(.bottom, 16)
+                }
                 
                 // Tag Selector
                 Menu {

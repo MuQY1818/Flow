@@ -6,6 +6,7 @@ struct FocusSession: Identifiable, Codable {
     let date: Date
     let duration: TimeInterval
     let tag: String
+    var goal: String? // Optional user-defined goal
 }
 
 struct Tag: Identifiable, Hashable {

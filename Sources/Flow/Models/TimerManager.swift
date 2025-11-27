@@ -60,6 +60,7 @@ class TimerManager: ObservableObject {
     
     @Published var sessions: [FocusSession] = []
     @Published var selectedTag: Tag = Tag.defaults.first!
+    @Published var currentGoal: String = "" // Current session goal
     
     init() {
         requestNotificationPermission()
@@ -190,7 +191,12 @@ class TimerManager: ObservableObject {
         // Only save Focus sessions
         guard mode == .focus else { return }
         
-        let session = FocusSession(date: Date(), duration: currentDuration(), tag: selectedTag.name)
+        let session = FocusSession(
+            date: Date(),
+            duration: currentDuration(),
+            tag: selectedTag.name,
+            goal: currentGoal.isEmpty ? nil : currentGoal
+        )
         sessions.append(session)
         
         if let encoded = try? JSONEncoder().encode(sessions) {
