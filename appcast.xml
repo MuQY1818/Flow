@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.9.2</title>
+            <title>Flow 1.9.3</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>修复Stats按钮遮挡、优化跳过按钮位置、全新高清分享卡片设计</p>
+                    <p>优化UI布局：移除冗余Tag选择器、设置移至菜单栏右键、Stats/Controls对齐优化、分享卡片修复</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 22:17:52 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 22:59:11 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.9.2/Flow.app.zip"
-                sparkle:version="45"
-                sparkle:shortVersionString="1.9.2"
-                sparkle:sha256="2e22e45471401c172c97209faa8fb9f8d03cda79b4aa0cbe685d56177c2bd4a4"
-                length="1085719"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.9.3/Flow.app.zip"
+                sparkle:version="46"
+                sparkle:shortVersionString="1.9.3"
+                sparkle:sha256="eb1ef40b86293673ff1717b0f27f6dcf00286b8de8c26ef5bce2fdb4d20653e6"
+                length="1074673"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

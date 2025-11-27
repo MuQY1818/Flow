@@ -61,6 +61,7 @@ class TimerManager: ObservableObject {
     @Published var sessions: [FocusSession] = []
     @Published var selectedTag: Tag = Tag.defaults.first!
     @Published var currentGoal: String = "" // Current session goal
+    @Published var shouldShowSettings: Bool = false // Triggered from menu bar
     
     init() {
         requestNotificationPermission()

@@ -233,39 +233,38 @@ struct QRCodeGenerator {
     }
 }
 
-// High-resolution snapshot extension
+// High-resolution snapshot extension for ShareCardView
 extension View {
+    @MainActor
     func snapshot(scale: CGFloat = 2.0) -> NSImage? {
+        // 使用 ImageRenderer (macOS 13+)
+        let renderer = ImageRenderer(content: self.environment(\.colorScheme, .dark))
+        renderer.scale = scale
+        
+        if let nsImage = renderer.nsImage {
+            return nsImage
+        }
+        
+        // Fallback: 使用 NSHostingController
         let controller = NSHostingController(rootView: self.environment(\.colorScheme, .dark))
         let view = controller.view
         
-        let targetSize = controller.view.fittingSize
-        view.bounds = CGRect(origin: .zero, size: targetSize)
-        view.frame = CGRect(origin: .zero, size: targetSize)
+        // 使用固定尺寸而不是 fittingSize
+        let targetSize = NSSize(width: 320, height: 440)
+        view.frame = NSRect(origin: .zero, size: targetSize)
+        view.bounds = NSRect(origin: .zero, size: targetSize)
         
         // Force layout
         view.layoutSubtreeIfNeeded()
         
-        // Create high-resolution image
-        let scaledSize = NSSize(width: targetSize.width * scale, height: targetSize.height * scale)
-        let image = NSImage(size: scaledSize)
-        
-        image.lockFocus()
-        if let context = NSGraphicsContext.current {
-            context.imageInterpolation = .high
-            
-            // Scale the context for high DPI rendering
-            let transform = NSAffineTransform()
-            transform.scale(by: scale)
-            transform.concat()
-            
-            // Draw the view
-            if let bitmapRep = view.bitmapImageRepForCachingDisplay(in: view.bounds) {
-                view.cacheDisplay(in: view.bounds, to: bitmapRep)
-                bitmapRep.draw(in: CGRect(origin: .zero, size: targetSize))
-            }
+        // 使用 cacheDisplay 方法
+        guard let bitmapRep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else {
+            return nil
         }
-        image.unlockFocus()
+        view.cacheDisplay(in: view.bounds, to: bitmapRep)
+        
+        let image = NSImage(size: targetSize)
+        image.addRepresentation(bitmapRep)
         
         return image
     }

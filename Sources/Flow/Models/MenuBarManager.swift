@@ -143,6 +143,15 @@ class MenuBarManager: NSObject {
         menuBarStyleItem.target = self
         menu.addItem(menuBarStyleItem)
         
+        // Settings
+        let settingsItem = NSMenuItem(
+            title: "设置...",
+            action: #selector(openSettings),
+            keyEquivalent: ","
+        )
+        settingsItem.target = self
+        menu.addItem(settingsItem)
+        
         menu.addItem(NSMenuItem.separator())
         
         // Check for updates
@@ -184,5 +193,13 @@ class MenuBarManager: NSObject {
     
     @objc private func quitApp() {
         NSApplication.shared.terminate(nil)
+    }
+    
+    @objc private func openSettings() {
+        // Open popover and show settings
+        timerManager.shouldShowSettings = true
+        if let button = statusItem?.button {
+            togglePopover(button)
+        }
     }
 }

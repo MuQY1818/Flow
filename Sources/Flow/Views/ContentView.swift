@@ -74,30 +74,36 @@ struct ContentView: View {
                     .buttonStyle(.plain)
                     .onHover { h in quitHovered = h }
                 }
-                .padding(20)
-                .frame(height: 70) // Fixed height container to prevent jumps
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
                 
                 // Separator Line
                 Rectangle()
                     .frame(height: 1)
                     .foregroundColor(Color(white: 0.15))
                 
-                // Content Area
-                ZStack(alignment: .top) {
+                // Content Area - 丝滑过渡动画
+                ZStack(alignment: .center) {
                     if selectedTab == "Controls" {
                         TimerView(showSettings: $showSettings)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .transition(.move(edge: .leading).combined(with: .opacity))
-                            .zIndex(1)
-                    } else {
+                            .transition(.asymmetric(
+                                insertion: .move(edge: .leading).combined(with: .opacity),
+                                removal: .move(edge: .leading).combined(with: .opacity)
+                            ))
+                    }
+                    
+                    if selectedTab == "Stats" {
                         StatsView()
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .transition(.move(edge: .trailing).combined(with: .opacity))
-                            .zIndex(0)
+                            .transition(.asymmetric(
+                                insertion: .move(edge: .trailing).combined(with: .opacity),
+                                removal: .move(edge: .trailing).combined(with: .opacity)
+                            ))
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .clipped() // Prevent content from bleeding during transition
+                .clipped()
             }
             
             // Settings Overlay
@@ -126,23 +132,26 @@ struct ContentView: View {
         }
         .frame(width: 320, height: 400)
         .preferredColorScheme(.dark)
+        .onChange(of: timerManager.shouldShowSettings) { newValue in
+            if newValue {
+                withAnimation { showSettings = true }
+                timerManager.shouldShowSettings = false
+            }
+        }
     }
 }
 
 struct TimerView: View {
     @EnvironmentObject var timerManager: TimerManager
     @Binding var showSettings: Bool
-    @State private var tagHovered = false
     @State private var mainButtonHovered = false
-    @State private var skipHovered = false
-    @State private var settingsHovered = false
     @State private var isEditingGoal = false
     
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack {
             // Main Content Centered
             VStack(spacing: 0) {
-                Spacer()
+                Spacer().frame(height: 20)
                 
                 // Goal Input (One Thing)
                 if timerManager.mode == .focus {
@@ -193,43 +202,6 @@ struct TimerView: View {
                     .padding(.bottom, 16)
                 }
                 
-                // Tag Selector
-                Menu {
-                    ForEach(Tag.defaults) { tag in
-                        Button {
-                            timerManager.selectedTag = tag
-                        } label: {
-                            HStack {
-                                Circle().fill(tag.color).frame(width: 8, height: 8)
-                                Text(tag.name)
-                            }
-                        }
-                    }
-                } label: {
-                    HStack(spacing: 6) {
-                        Circle()
-                            .fill(timerManager.selectedTag.color)
-                            .frame(width: 6, height: 6)
-                        
-                        Text(timerManager.selectedTag.name)
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(tagHovered ? .white : .gray)
-                        
-                        Image(systemName: "chevron.down")
-                            .font(.system(size: 10))
-                            .foregroundColor(tagHovered ? .white : .gray)
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
-                    .background(tagHovered ? Color(white: 0.2) : Color(white: 0.15))
-                    .cornerRadius(12)
-                    .scaleEffect(tagHovered ? 1.05 : 1.0)
-                    .animation(.spring(response: 0.25, dampingFraction: 0.65), value: tagHovered)
-                }
-                .menuStyle(.borderlessButton)
-                .onHover { h in tagHovered = h }
-                .padding(.bottom, 20)
-                
                 // Status Text with Flow Animation
                 FlowText(text: timerManager.mode == .focus ? "Ready to Flow" : "Take a Break", 
                          isFlowing: timerManager.state == .running)
@@ -267,44 +239,8 @@ struct TimerView: View {
                 .buttonStyle(.plain)
                 .onHover { h in mainButtonHovered = h }
                 .padding(.horizontal, 30)
-                
-                // Skip button - 始终显示
-                Button {
-                    timerManager.skip()
-                } label: {
-                    Text(timerManager.mode == .focus ? "跳过专注" : "跳过休息")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(skipHovered ? .white : .gray)
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 6)
-                        .background(skipHovered ? Color(white: 0.25) : Color(white: 0.15))
-                        .cornerRadius(14)
-                        .scaleEffect(skipHovered ? 1.05 : 1.0)
-                        .animation(.spring(response: 0.25, dampingFraction: 0.65), value: skipHovered)
-                }
-                .buttonStyle(.plain)
-                .onHover { h in skipHovered = h }
-                .padding(.top, 12)
                 .padding(.bottom, 30)
-            
             }
-            
-            // Settings Button (Corner)
-            Button {
-                withAnimation { showSettings.toggle() }
-            } label: {
-                Image(systemName: "slider.horizontal.3")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(settingsHovered ? .white : .gray)
-                    .frame(width: 36, height: 36)
-                    .background(settingsHovered ? Color(white: 0.25) : Color(white: 0.15))
-                    .clipShape(Circle())
-                    .scaleEffect(settingsHovered ? 1.1 : 1.0)
-                    .animation(.spring(response: 0.25, dampingFraction: 0.65), value: settingsHovered)
-            }
-            .buttonStyle(.plain)
-            .onHover { h in settingsHovered = h }
-            .padding(20)
         }
     }
 }
@@ -327,167 +263,168 @@ struct StatsView: View {
     @State private var copySuccess = false
     
     var body: some View {
-        ZStack(alignment: .topTrailing) {
+        ZStack {
             // Main Content
             VStack(spacing: 10) {
-                Spacer()
-                
                 // Date Range Header
-            HStack {
-                Button {
-                    moveWeek(by: -1)
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(leftArrowHovered ? .white : .gray)
-                        .frame(width: 28, height: 28)
-                        .background(leftArrowHovered ? Color.white.opacity(0.15) : Color.clear)
-                        .cornerRadius(6)
-                        .scaleEffect(leftArrowHovered ? 1.1 : 1.0)
-                        .animation(.spring(response: 0.25, dampingFraction: 0.65), value: leftArrowHovered)
+                HStack {
+                    Button {
+                        moveWeek(by: -1)
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(leftArrowHovered ? .white : .gray)
+                            .frame(width: 28, height: 28)
+                            .background(leftArrowHovered ? Color.white.opacity(0.15) : Color.clear)
+                            .cornerRadius(6)
+                            .scaleEffect(leftArrowHovered ? 1.1 : 1.0)
+                            .animation(.spring(response: 0.25, dampingFraction: 0.65), value: leftArrowHovered)
+                    }
+                    .buttonStyle(.plain)
+                    .onHover { hovering in leftArrowHovered = hovering }
+                    
+                    Spacer()
+                    
+                    Text(dateRangeString)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    Spacer()
+                    
+                    Button {
+                        moveWeek(by: 1)
+                    } label: {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(rightArrowHovered ? .white : .gray)
+                            .frame(width: 28, height: 28)
+                            .background(rightArrowHovered ? Color.white.opacity(0.15) : Color.clear)
+                            .cornerRadius(6)
+                            .scaleEffect(rightArrowHovered ? 1.1 : 1.0)
+                            .animation(.spring(response: 0.25, dampingFraction: 0.65), value: rightArrowHovered)
+                    }
+                    .buttonStyle(.plain)
+                    .onHover { hovering in rightArrowHovered = hovering }
                 }
-                .buttonStyle(.plain)
-                .onHover { hovering in leftArrowHovered = hovering }
+                .padding(.horizontal, 30)
+                .padding(.top, 20)
                 
-                Spacer()
-                
-                Text(dateRangeString)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                
-                Spacer()
-                
-                Button {
-                    moveWeek(by: 1)
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(rightArrowHovered ? .white : .gray)
-                        .frame(width: 28, height: 28)
-                        .background(rightArrowHovered ? Color.white.opacity(0.15) : Color.clear)
-                        .cornerRadius(6)
-                        .scaleEffect(rightArrowHovered ? 1.1 : 1.0)
-                        .animation(.spring(response: 0.25, dampingFraction: 0.65), value: rightArrowHovered)
+                // Total Focus
+                VStack(spacing: 2) {
+                    Text(hoveredSummary?.title.uppercased() ?? "TOTAL FOCUS")
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundColor(.gray)
+                        .tracking(1)
+                        .contentTransition(.opacity)
+                        .animation(.easeInOut(duration: 0.2), value: hoveredSummary?.id)
+                    
+                    FocusTimeDisplay(components: displayedDuration.focusTimeComponents())
+                        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: displayedDuration)
                 }
-                .buttonStyle(.plain)
-                .onHover { hovering in rightArrowHovered = hovering }
-            }
-            .padding(.horizontal, 30)
-            .padding(.top, 5)
-            
-            // Total Focus
-            VStack(spacing: 2) {
-                Text(hoveredSummary?.title.uppercased() ?? "TOTAL FOCUS")
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundColor(.gray)
-                    .tracking(1)
-                    .contentTransition(.opacity)
-                    .animation(.easeInOut(duration: 0.2), value: hoveredSummary?.id)
+                .padding(.vertical, 5)
                 
-                FocusTimeDisplay(components: displayedDuration.focusTimeComponents())
-                    .animation(.spring(response: 0.35, dampingFraction: 0.8), value: displayedDuration)
-            }
-            .padding(.vertical, 5)
-            
-            // Heatmap
-            ContributionGraphView(weekStart: currentWeekStart, hoveredSummary: $hoveredSummary)
-                .frame(height: 120)
-            
-                Spacer()
-            }
-            
-            // Bottom Buttons
-            HStack(spacing: 12) {
-                // Share Button
-                Button {
-                    showShareSheet = true
-                } label: {
-                    Image(systemName: "square.and.arrow.up")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(shareButtonHovered ? .white : .gray)
-                        .frame(width: 36, height: 36)
-                        .background(shareButtonHovered ? Color.blue.opacity(0.3) : Color(white: 0.15))
-                        .clipShape(Circle())
-                        .scaleEffect(shareButtonHovered ? 1.1 : 1.0)
-                        .animation(.easeOut(duration: 0.15), value: shareButtonHovered)
-                }
-                .buttonStyle(.plain)
-                .onHover { h in shareButtonHovered = h }
+                // Heatmap
+                ContributionGraphView(weekStart: currentWeekStart, hoveredSummary: $hoveredSummary)
+                    .frame(height: 120)
                 
-                // Detailed Stats Button
-                Button {
-                    showDetailedStats = true
-                } label: {
-                    Image(systemName: "chart.bar.xaxis")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(expandButtonHovered ? .white : .gray)
-                        .frame(width: 36, height: 36)
-                        .background(expandButtonHovered ? Color.green.opacity(0.3) : Color(white: 0.15))
-                        .clipShape(Circle())
-                        .scaleEffect(expandButtonHovered ? 1.1 : 1.0)
-                        .animation(.easeOut(duration: 0.15), value: expandButtonHovered)
+                // Bottom Buttons
+                HStack(spacing: 12) {
+                    // Share Button
+                    Button {
+                        showShareSheet = true
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(shareButtonHovered ? .white : .gray)
+                            .frame(width: 36, height: 36)
+                            .background(shareButtonHovered ? Color.blue.opacity(0.3) : Color(white: 0.15))
+                            .clipShape(Circle())
+                            .scaleEffect(shareButtonHovered ? 1.1 : 1.0)
+                            .animation(.easeOut(duration: 0.15), value: shareButtonHovered)
+                    }
+                    .buttonStyle(.plain)
+                    .onHover { h in shareButtonHovered = h }
+                    
+                    // Detailed Stats Button
+                    Button {
+                        showDetailedStats = true
+                    } label: {
+                        Image(systemName: "chart.bar.xaxis")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(expandButtonHovered ? .white : .gray)
+                            .frame(width: 36, height: 36)
+                            .background(expandButtonHovered ? Color.green.opacity(0.3) : Color(white: 0.15))
+                            .clipShape(Circle())
+                            .scaleEffect(expandButtonHovered ? 1.1 : 1.0)
+                            .animation(.easeOut(duration: 0.15), value: expandButtonHovered)
+                    }
+                    .buttonStyle(.plain)
+                    .onHover { h in expandButtonHovered = h }
                 }
-                .buttonStyle(.plain)
-                .onHover { h in expandButtonHovered = h }
+                .padding(.top, 0)
+                .padding(.bottom, 7)
             }
-            .padding(.top, 10)
-            .padding(.trailing, 20)
             
             // Share Overlay
             if showShareSheet {
                 ZStack {
-                    Color.black.opacity(0.85)
+                    Color.black.opacity(0.9)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture { showShareSheet = false }
                     
-                    VStack(spacing: 20) {
+                    VStack(spacing: 12) {
                         ShareCardView(
                             dailyDuration: todayDuration,
                             sessionCount: todaySessions.count
                         )
                         .environmentObject(timerManager)
-                        .scaleEffect(0.7)
-                        .frame(width: 320 * 0.7, height: 440 * 0.7)
+                        .scaleEffect(0.58)
+                        .frame(width: 320 * 0.58, height: 440 * 0.58)
                         
-                        HStack(spacing: 16) {
+                        HStack(spacing: 12) {
                             Button {
                                 copyToClipboard()
                             } label: {
-                                HStack {
-                                    Image(systemName: copySuccess ? "checkmark" : "doc.on.doc")
-                                    Text(copySuccess ? "Copied" : "Copy")
+                                HStack(spacing: 6) {
+                                    Image(systemName: copySuccess ? "checkmark.circle.fill" : "doc.on.doc")
+                                        .foregroundColor(copySuccess ? .green : .white)
+                                    Text(copySuccess ? "已复制" : "复制")
                                 }
-                                .font(.system(size: 13, weight: .medium))
+                                .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.white)
-                                .padding(.horizontal, 16)
+                                .padding(.horizontal, 14)
                                 .padding(.vertical, 8)
                                 .background(Color.white.opacity(0.1))
                                 .cornerRadius(8)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                                )
                             }
                             .buttonStyle(.plain)
                             
                             Button {
                                 saveImage()
                             } label: {
-                                HStack {
+                                HStack(spacing: 6) {
                                     Image(systemName: "square.and.arrow.down")
-                                    Text("Save")
+                                    Text("保存")
                                 }
-                                .font(.system(size: 13, weight: .medium))
+                                .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.white)
-                                .padding(.horizontal, 16)
+                                .padding(.horizontal, 14)
                                 .padding(.vertical, 8)
                                 .background(Color.white.opacity(0.1))
                                 .cornerRadius(8)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                                )
+                            }
+                            .buttonStyle(.plain)
+                            
+                            Button {
+                                showShareSheet = false
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(.gray)
+                                    .frame(width: 32, height: 32)
+                                    .background(Color.white.opacity(0.1))
+                                    .clipShape(Circle())
                             }
                             .buttonStyle(.plain)
                         }
@@ -523,7 +460,8 @@ struct StatsView: View {
             sessionCount: todaySessions.count
         ).environmentObject(timerManager)
         
-        if let image = cardView.snapshot() {
+        // 使用 3x 缩放生成高清图片
+        if let image = cardView.snapshot(scale: 3.0) {
             let pasteboard = NSPasteboard.general
             pasteboard.clearContents()
             pasteboard.writeObjects([image])
@@ -541,7 +479,8 @@ struct StatsView: View {
             sessionCount: todaySessions.count
         ).environmentObject(timerManager)
         
-        if let image = cardView.snapshot() {
+        // 使用 3x 缩放生成高清图片
+        if let image = cardView.snapshot(scale: 3.0) {
             let savePanel = NSSavePanel()
             savePanel.allowedContentTypes = [.png]
             savePanel.canCreateDirectories = true
