@@ -437,7 +437,7 @@ struct StatsView: View {
             // Share Overlay
             if showShareSheet {
                 ZStack {
-                    Color.black.opacity(0.8)
+                    Color.black.opacity(0.85)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture { showShareSheet = false }
                     
@@ -447,6 +447,8 @@ struct StatsView: View {
                             sessionCount: todaySessions.count
                         )
                         .environmentObject(timerManager)
+                        .scaleEffect(0.85)
+                        .frame(width: 260 * 0.85, height: 350 * 0.85)
                         .shadow(color: .black.opacity(0.5), radius: 20, x: 0, y: 10)
                         
                         HStack(spacing: 16) {
@@ -455,12 +457,18 @@ struct StatsView: View {
                             } label: {
                                 HStack {
                                     Image(systemName: copySuccess ? "checkmark" : "doc.on.doc")
-                                    Text(copySuccess ? "Copied!" : "Copy Image")
+                                    Text(copySuccess ? "Copied" : "Copy")
                                 }
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundColor(.white)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
                                 .background(Color.white.opacity(0.1))
                                 .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                                )
                             }
                             .buttonStyle(.plain)
                             
@@ -469,12 +477,18 @@ struct StatsView: View {
                             } label: {
                                 HStack {
                                     Image(systemName: "square.and.arrow.down")
-                                    Text("Save Image")
+                                    Text("Save")
                                 }
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundColor(.white)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
                                 .background(Color.white.opacity(0.1))
                                 .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                                )
                             }
                             .buttonStyle(.plain)
                         }

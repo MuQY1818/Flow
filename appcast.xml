@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.9.0</title>
+            <title>Flow 1.9.1</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>修复界面跳动、新增高级数据分享卡片（支持二维码）</p>
+                    <p>优化分享卡片布局（完美适配小窗口）、修复显示截断问题</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 22:07:02 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 22:09:47 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.9.0/Flow.app.zip"
-                sparkle:version="43"
-                sparkle:shortVersionString="1.9.0"
-                sparkle:sha256="4acc77445d596f690302620e5adab00f133be8cd3623b5d4b60ec4a80979ef25"
-                length="1077096"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.9.1/Flow.app.zip"
+                sparkle:version="44"
+                sparkle:shortVersionString="1.9.1"
+                sparkle:sha256="8cdfa845fa212920b1e94b7c6df5be7d07001271de54842a3a99717486388541"
+                length="1080052"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
