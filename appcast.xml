@@ -7,19 +7,19 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.3.7</title>
+            <title>Flow 1.3.8</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>热力图方块悬停效果优化：放大、发光、边框高亮</p>
+                    <p>箭头按钮悬停动画：放大、背景高亮、颜色变化</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 00:53:53 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 13:17:27 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.3.7/Flow.app.zip"
-                sparkle:version="22"
-                sparkle:shortVersionString="1.3.7"
-                length="890136"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.3.8/Flow.app.zip"
+                sparkle:version="23"
+                sparkle:shortVersionString="1.3.8"
+                length="894266"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

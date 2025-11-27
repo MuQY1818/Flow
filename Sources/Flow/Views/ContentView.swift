@@ -229,6 +229,8 @@ struct StatsView: View {
         return calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today))!
     }()
     @State private var hoveredSummary: ContributionGraphView.CellStat? = nil
+    @State private var leftArrowHovered = false
+    @State private var rightArrowHovered = false
     
     var body: some View {
         VStack(spacing: 10) {
@@ -240,8 +242,19 @@ struct StatsView: View {
                     moveWeek(by: -1)
                 } label: {
                     Image(systemName: "chevron.left")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(leftArrowHovered ? .white : .gray)
+                        .frame(width: 28, height: 28)
+                        .background(leftArrowHovered ? Color.white.opacity(0.15) : Color.clear)
+                        .cornerRadius(6)
+                        .scaleEffect(leftArrowHovered ? 1.1 : 1.0)
                 }
                 .buttonStyle(.plain)
+                .onHover { hovering in
+                    withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
+                        leftArrowHovered = hovering
+                    }
+                }
                 
                 Spacer()
                 
@@ -255,11 +268,21 @@ struct StatsView: View {
                     moveWeek(by: 1)
                 } label: {
                     Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(rightArrowHovered ? .white : .gray)
+                        .frame(width: 28, height: 28)
+                        .background(rightArrowHovered ? Color.white.opacity(0.15) : Color.clear)
+                        .cornerRadius(6)
+                        .scaleEffect(rightArrowHovered ? 1.1 : 1.0)
                 }
                 .buttonStyle(.plain)
+                .onHover { hovering in
+                    withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
+                        rightArrowHovered = hovering
+                    }
+                }
             }
             .padding(.horizontal, 30)
-            .foregroundColor(.gray)
             .padding(.top, 5)
             
             // Total Focus
