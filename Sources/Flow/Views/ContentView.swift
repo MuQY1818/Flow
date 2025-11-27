@@ -231,8 +231,11 @@ struct StatsView: View {
     @State private var hoveredSummary: ContributionGraphView.CellStat? = nil
     @State private var leftArrowHovered = false
     @State private var rightArrowHovered = false
+    @State private var showDetailedStats = false
+    @State private var expandButtonHovered = false
     
     var body: some View {
+        ZStack {
         VStack(spacing: 10) {
             Spacer()
             
@@ -304,11 +307,54 @@ struct StatsView: View {
             ContributionGraphView(weekStart: currentWeekStart, hoveredSummary: $hoveredSummary)
                 .frame(height: 120)
             
+            // 展开详细统计按钮
+            Button {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    showDetailedStats = true
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "chart.bar.xaxis")
+                        .font(.system(size: 11))
+                    Text("详细统计")
+                        .font(.system(size: 11, weight: .medium))
+                }
+                .foregroundColor(expandButtonHovered ? .white : .gray)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(expandButtonHovered ? Color.green.opacity(0.3) : Color(white: 0.15))
+                .cornerRadius(14)
+                .scaleEffect(expandButtonHovered ? 1.05 : 1.0)
+            }
+            .buttonStyle(.plain)
+            .onHover { hovering in
+                withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
+                    expandButtonHovered = hovering
+                }
+            }
+            .padding(.top, 4)
+            
             Spacer()
         }
         .padding(.bottom, 10)
         .onChange(of: currentWeekStart) { _ in
             hoveredSummary = nil
+        }
+        
+        // 详细统计弹窗
+        if showDetailedStats {
+            Color.black.opacity(0.5)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        showDetailedStats = false
+                    }
+                }
+            
+            DetailedStatsView(isPresented: $showDetailedStats)
+                .transition(.scale(scale: 0.9).combined(with: .opacity))
+                .shadow(color: .black.opacity(0.3), radius: 20)
+        }
         }
     }
     
