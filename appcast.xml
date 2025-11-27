@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.6.2</title>
+            <title>Flow 1.6.3</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>详细统计页面加大(400×580)、日/周/月/年按钮悬停动效、导航箭头悬停动效</p>
+                    <p>详细统计改为独立窗口显示，不再受主窗口限制</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 14:34:35 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 14:38:57 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.2/Flow.app.zip"
-                sparkle:version="31"
-                sparkle:shortVersionString="1.6.2"
-                sparkle:sha256="20d0e1b2eea58518c3a8ee025c4d8502d6a0bc37d9b57edf169ce3c080ed28b9"
-                length="1000614"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.3/Flow.app.zip"
+                sparkle:version="32"
+                sparkle:shortVersionString="1.6.3"
+                sparkle:sha256="4f9962567a81452e9fad172f081f2e14abee9277ad8277f58ea29047e781a471"
+                length="995053"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

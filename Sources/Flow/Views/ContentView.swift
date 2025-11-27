@@ -341,20 +341,12 @@ struct StatsView: View {
             hoveredSummary = nil
         }
         
-        // 详细统计弹窗
-        if showDetailedStats {
-            Color.black.opacity(0.5)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                        showDetailedStats = false
-                    }
-                }
-            
-            DetailedStatsView(isPresented: $showDetailedStats)
-                .transition(.scale(scale: 0.9).combined(with: .opacity))
-                .shadow(color: .black.opacity(0.3), radius: 20)
         }
+        .onChange(of: showDetailedStats) { newValue in
+            if newValue {
+                openDetailedStatsWindow()
+                showDetailedStats = false
+            }
         }
     }
     
@@ -364,6 +356,32 @@ struct StatsView: View {
                 currentWeekStart = newDate
             }
         }
+    }
+    
+    /// 打开独立的详细统计窗口
+    func openDetailedStatsWindow() {
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 420, height: 600),
+            styleMask: [.titled, .closable, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "专注统计"
+        window.titlebarAppearsTransparent = true
+        window.titleVisibility = .hidden
+        window.backgroundColor = NSColor(red: 0.06, green: 0.06, blue: 0.08, alpha: 1)
+        window.isMovableByWindowBackground = true
+        window.center()
+        
+        let hostingView = NSHostingView(
+            rootView: StandaloneStatsView()
+                .environmentObject(timerManager)
+        )
+        window.contentView = hostingView
+        window.makeKeyAndOrderFront(nil)
+        
+        // 保持窗口引用
+        StatsWindowController.shared.window = window
     }
     
     var dateRangeString: String {

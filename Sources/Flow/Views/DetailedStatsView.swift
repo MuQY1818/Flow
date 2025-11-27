@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 /// 详细统计页面
 struct DetailedStatsView: View {
@@ -484,6 +485,291 @@ struct BarChartView: View {
         case .week: return ["日", "一", "二", "三", "四", "五", "六"][index]
         case .month: return "W\(index + 1)"
         case .year: return "\(index + 1)"
+        }
+    }
+}
+
+// MARK: - 独立窗口版本
+
+/// 窗口控制器（保持引用防止窗口被释放）
+class StatsWindowController {
+    static let shared = StatsWindowController()
+    var window: NSWindow?
+}
+
+/// 独立窗口的统计视图
+struct StandaloneStatsView: View {
+    @EnvironmentObject var timerManager: TimerManager
+    @State private var selectedPeriod: StatsPeriod = .week
+    @State private var currentDate = Date()
+    @State private var leftArrowHovered = false
+    @State private var rightArrowHovered = false
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            // 时间段选择器
+            HStack(spacing: 4) {
+                ForEach(StatsPeriod.allCases, id: \.self) { period in
+                    PeriodButton(
+                        period: period,
+                        isSelected: selectedPeriod == period
+                    ) {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            selectedPeriod = period
+                        }
+                    }
+                }
+            }
+            .padding(4)
+            .background(Color(white: 0.1))
+            .cornerRadius(12)
+            .padding(.horizontal, 24)
+            .padding(.top, 20)
+            
+            // 日期导航
+            HStack {
+                Button {
+                    navigateDate(by: -1)
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(leftArrowHovered ? .white : .gray)
+                        .frame(width: 32, height: 32)
+                        .background(leftArrowHovered ? Color.white.opacity(0.15) : Color.clear)
+                        .cornerRadius(8)
+                        .scaleEffect(leftArrowHovered ? 1.1 : 1.0)
+                }
+                .buttonStyle(.plain)
+                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { leftArrowHovered = h } }
+                
+                Spacer()
+                
+                Text(dateRangeText)
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundColor(.white)
+                
+                Spacer()
+                
+                Button {
+                    navigateDate(by: 1)
+                } label: {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(rightArrowHovered ? .white : .gray)
+                        .frame(width: 32, height: 32)
+                        .background(rightArrowHovered ? Color.white.opacity(0.15) : Color.clear)
+                        .cornerRadius(8)
+                        .scaleEffect(rightArrowHovered ? 1.1 : 1.0)
+                }
+                .buttonStyle(.plain)
+                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { rightArrowHovered = h } }
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 16)
+            
+            // 统计内容
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 16) {
+                    // 总时长
+                    StatsCard {
+                        VStack(spacing: 8) {
+                            Text("总专注时长")
+                                .font(.system(size: 13))
+                                .foregroundColor(.gray)
+                            
+                            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                                Text("\(totalHours)")
+                                    .font(.system(size: 56, weight: .bold, design: .rounded))
+                                    .foregroundColor(.white)
+                                Text("h")
+                                    .font(.system(size: 28, weight: .medium))
+                                    .foregroundColor(.gray)
+                                Text("\(totalMinutes)")
+                                    .font(.system(size: 56, weight: .bold, design: .rounded))
+                                    .foregroundColor(.white)
+                                Text("m")
+                                    .font(.system(size: 28, weight: .medium))
+                                    .foregroundColor(.gray)
+                            }
+                            .contentTransition(.numericText())
+                            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: totalDuration)
+                        }
+                    }
+                    
+                    // 番茄钟数量
+                    HStack(spacing: 12) {
+                        MiniStatsCard(
+                            icon: "flame.fill",
+                            color: .orange,
+                            title: "番茄钟",
+                            value: "\(sessionsCount)"
+                        )
+                        
+                        MiniStatsCard(
+                            icon: "clock.fill",
+                            color: .blue,
+                            title: "平均时长",
+                            value: averageDuration
+                        )
+                    }
+                    
+                    // 柱状图
+                    StatsCard {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("专注趋势")
+                                .font(.system(size: 13))
+                                .foregroundColor(.gray)
+                            
+                            BarChartView(data: chartData, period: selectedPeriod)
+                                .frame(height: 140)
+                        }
+                    }
+                    
+                    // 最佳时段
+                    if let bestTime = bestTimeOfDay {
+                        StatsCard {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("最佳专注时段")
+                                        .font(.system(size: 13))
+                                        .foregroundColor(.gray)
+                                    Text(bestTime)
+                                        .font(.system(size: 20, weight: .semibold))
+                                        .foregroundColor(.green)
+                                }
+                                Spacer()
+                                Image(systemName: "star.fill")
+                                    .font(.system(size: 28))
+                                    .foregroundColor(.yellow.opacity(0.8))
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 24)
+            }
+        }
+        .frame(minWidth: 400, minHeight: 550)
+        .background(Color(red: 0.06, green: 0.06, blue: 0.08))
+    }
+    
+    // MARK: - 计算属性
+    
+    private var filteredSessions: [FocusSession] {
+        let calendar = Calendar.current
+        return timerManager.sessions.filter { session in
+            switch selectedPeriod {
+            case .day:
+                return calendar.isDate(session.date, inSameDayAs: currentDate)
+            case .week:
+                let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: currentDate))!
+                let weekEnd = calendar.date(byAdding: .day, value: 7, to: weekStart)!
+                return session.date >= weekStart && session.date < weekEnd
+            case .month:
+                return calendar.isDate(session.date, equalTo: currentDate, toGranularity: .month)
+            case .year:
+                return calendar.isDate(session.date, equalTo: currentDate, toGranularity: .year)
+            }
+        }
+    }
+    
+    private var totalDuration: TimeInterval {
+        filteredSessions.reduce(0) { $0 + $1.duration }
+    }
+    
+    private var totalHours: Int { Int(totalDuration) / 3600 }
+    private var totalMinutes: Int { (Int(totalDuration) % 3600) / 60 }
+    private var sessionsCount: Int { filteredSessions.count }
+    
+    private var averageDuration: String {
+        guard sessionsCount > 0 else { return "0m" }
+        return "\(Int(totalDuration / Double(sessionsCount)) / 60)m"
+    }
+    
+    private var chartData: [Double] {
+        let calendar = Calendar.current
+        switch selectedPeriod {
+        case .day:
+            var hourly = Array(repeating: 0.0, count: 24)
+            for session in filteredSessions {
+                let hour = calendar.component(.hour, from: session.date)
+                hourly[hour] += session.duration / 60
+            }
+            return hourly
+        case .week:
+            var daily = Array(repeating: 0.0, count: 7)
+            let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: currentDate))!
+            for session in filteredSessions {
+                let days = calendar.dateComponents([.day], from: weekStart, to: session.date).day ?? 0
+                if days >= 0 && days < 7 { daily[days] += session.duration / 60 }
+            }
+            return daily
+        case .month:
+            var weekly = Array(repeating: 0.0, count: 4)
+            for session in filteredSessions {
+                let week = calendar.component(.weekOfMonth, from: session.date) - 1
+                if week >= 0 && week < 4 { weekly[week] += session.duration / 60 }
+            }
+            return weekly
+        case .year:
+            var monthly = Array(repeating: 0.0, count: 12)
+            for session in filteredSessions {
+                let month = calendar.component(.month, from: session.date) - 1
+                monthly[month] += session.duration / 60
+            }
+            return monthly
+        }
+    }
+    
+    private var bestTimeOfDay: String? {
+        var timeCounts: [String: TimeInterval] = [
+            "上午 (6-12)": 0, "下午 (12-18)": 0, "晚上 (18-24)": 0
+        ]
+        let calendar = Calendar.current
+        for session in filteredSessions {
+            let hour = calendar.component(.hour, from: session.date)
+            if hour >= 6 && hour < 12 { timeCounts["上午 (6-12)"]! += session.duration }
+            else if hour >= 12 && hour < 18 { timeCounts["下午 (12-18)"]! += session.duration }
+            else if hour >= 18 { timeCounts["晚上 (18-24)"]! += session.duration }
+        }
+        return timeCounts.max(by: { $0.value < $1.value })?.key
+    }
+    
+    private var dateRangeText: String {
+        let formatter = DateFormatter()
+        let calendar = Calendar.current
+        switch selectedPeriod {
+        case .day:
+            formatter.dateFormat = "M月d日 EEEE"
+            return formatter.string(from: currentDate)
+        case .week:
+            let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: currentDate))!
+            let weekEnd = calendar.date(byAdding: .day, value: 6, to: weekStart)!
+            formatter.dateFormat = "M/d"
+            return "\(formatter.string(from: weekStart)) - \(formatter.string(from: weekEnd))"
+        case .month:
+            formatter.dateFormat = "yyyy年M月"
+            return formatter.string(from: currentDate)
+        case .year:
+            formatter.dateFormat = "yyyy年"
+            return formatter.string(from: currentDate)
+        }
+    }
+    
+    private func navigateDate(by value: Int) {
+        let calendar = Calendar.current
+        let component: Calendar.Component = {
+            switch selectedPeriod {
+            case .day: return .day
+            case .week: return .weekOfYear
+            case .month: return .month
+            case .year: return .year
+            }
+        }()
+        if let newDate = calendar.date(byAdding: component, value: value, to: currentDate) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                currentDate = newDate
+            }
         }
     }
 }
