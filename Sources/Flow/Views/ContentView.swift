@@ -5,6 +5,8 @@ struct ContentView: View {
     @Namespace private var animation
     @State private var selectedTab = "Controls"
     @State private var showSettings = false
+    @State private var hoveredTab: String? = nil
+    @State private var quitHovered = false
     let tabs = ["Controls", "Stats"]
     
     var body: some View {
@@ -18,6 +20,9 @@ struct ContentView: View {
                     // Custom Segmented Control
                     HStack(spacing: 0) {
                         ForEach(tabs, id: \.self) { tab in
+                            let isSelected = selectedTab == tab
+                            let isHovered = hoveredTab == tab
+                            
                             Button {
                                 withAnimation(.easeInOut(duration: 0.25)) {
                                     selectedTab = tab
@@ -25,17 +30,24 @@ struct ContentView: View {
                             } label: {
                                 Text(tab)
                                     .font(.system(size: 13, weight: .medium))
-                                    .foregroundColor(selectedTab == tab ? .white : .gray)
+                                    .foregroundColor(isSelected ? .white : (isHovered ? .white.opacity(0.9) : .gray))
                                     .frame(width: 80, height: 28)
                                     .background {
-                                        if selectedTab == tab {
+                                        if isSelected {
                                             RoundedRectangle(cornerRadius: 8)
                                                 .fill(Color(white: 0.2))
                                                 .matchedGeometryEffect(id: "TabBackground", in: animation)
+                                        } else if isHovered {
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .fill(Color(white: 0.15))
                                         }
                                     }
+                                    .scaleEffect(isHovered && !isSelected ? 1.02 : 1.0)
                             }
                             .buttonStyle(.plain)
+                            .onHover { h in
+                                withAnimation(.easeOut(duration: 0.12)) { hoveredTab = h ? tab : nil }
+                            }
                         }
                     }
                     .padding(3)
@@ -50,9 +62,17 @@ struct ContentView: View {
                     } label: {
                         Text("Quit")
                             .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(.gray)
+                            .foregroundColor(quitHovered ? .red : .gray)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background(quitHovered ? Color.red.opacity(0.15) : Color.clear)
+                            .cornerRadius(6)
+                            .scaleEffect(quitHovered ? 1.05 : 1.0)
                     }
                     .buttonStyle(.plain)
+                    .onHover { h in
+                        withAnimation(.easeOut(duration: 0.12)) { quitHovered = h }
+                    }
                 }
                 .padding(20)
                 .frame(height: 70) // Fixed height container to prevent jumps
@@ -109,6 +129,10 @@ struct ContentView: View {
 struct TimerView: View {
     @EnvironmentObject var timerManager: TimerManager
     @Binding var showSettings: Bool
+    @State private var tagHovered = false
+    @State private var mainButtonHovered = false
+    @State private var skipHovered = false
+    @State private var settingsHovered = false
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -136,18 +160,20 @@ struct TimerView: View {
                         
                         Text(timerManager.selectedTag.name)
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(.gray)
+                            .foregroundColor(tagHovered ? .white : .gray)
                         
                         Image(systemName: "chevron.down")
                             .font(.system(size: 10))
-                            .foregroundColor(.gray)
+                            .foregroundColor(tagHovered ? .white : .gray)
                     }
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(Color(white: 0.15))
+                    .background(tagHovered ? Color(white: 0.2) : Color(white: 0.15))
                     .cornerRadius(12)
+                    .scaleEffect(tagHovered ? 1.05 : 1.0)
                 }
                 .menuStyle(.borderlessButton)
+                .onHover { h in withAnimation(.easeOut(duration: 0.12)) { tagHovered = h } }
                 .padding(.bottom, 20)
                 
                 // Status Text with Flow Animation
@@ -178,10 +204,13 @@ struct TimerView: View {
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
                     .frame(height: 50)
-                    .background(Color(white: 0.85))
-                    .cornerRadius(25) // Fully rounded
+                    .background(mainButtonHovered ? Color.white : Color(white: 0.85))
+                    .cornerRadius(25)
+                    .scaleEffect(mainButtonHovered ? 1.03 : 1.0)
+                    .shadow(color: mainButtonHovered ? .white.opacity(0.3) : .clear, radius: 8)
                 }
                 .buttonStyle(.plain)
+                .onHover { h in withAnimation(.easeOut(duration: 0.12)) { mainButtonHovered = h } }
                 .padding(.horizontal, 30)
                 
                 // Skip button - 始终显示
@@ -190,13 +219,15 @@ struct TimerView: View {
                 } label: {
                     Text(timerManager.mode == .focus ? "跳过专注" : "跳过休息")
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.gray)
+                        .foregroundColor(skipHovered ? .white : .gray)
                         .padding(.horizontal, 18)
                         .padding(.vertical, 6)
-                        .background(Color(white: 0.15))
+                        .background(skipHovered ? Color(white: 0.25) : Color(white: 0.15))
                         .cornerRadius(14)
+                        .scaleEffect(skipHovered ? 1.05 : 1.0)
                 }
                 .buttonStyle(.plain)
+                .onHover { h in withAnimation(.easeOut(duration: 0.12)) { skipHovered = h } }
                 .padding(.top, 10)
                 
                 Spacer()
@@ -209,12 +240,14 @@ struct TimerView: View {
             } label: {
                 Image(systemName: "slider.horizontal.3")
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.gray)
+                    .foregroundColor(settingsHovered ? .white : .gray)
                     .frame(width: 36, height: 36)
-                    .background(Color(white: 0.15))
+                    .background(settingsHovered ? Color(white: 0.25) : Color(white: 0.15))
                     .clipShape(Circle())
+                    .scaleEffect(settingsHovered ? 1.1 : 1.0)
             }
             .buttonStyle(.plain)
+            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { settingsHovered = h } }
             .padding(20)
         }
     }

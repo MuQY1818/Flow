@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.6.7</title>
+            <title>Flow 1.6.8</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>修复自动更新后无法打开的问题（移除隔离属性）</p>
+                    <p>所有可交互组件添加悬停动效：Tab按钮、Quit、Tag选择器、开始/暂停、跳过、设置</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 15:06:19 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 15:10:44 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.7/Flow.app.zip"
-                sparkle:version="36"
-                sparkle:shortVersionString="1.6.7"
-                sparkle:sha256="b35d063ba21f52e82d84d7336f673ba66cb9fa797d86f90282cc53f4dc5c7b89"
-                length="994717"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.6.8/Flow.app.zip"
+                sparkle:version="37"
+                sparkle:shortVersionString="1.6.8"
+                sparkle:sha256="10f30a2a5cf19dc6559f193c7016b89ea687302ac2557e77968eecd37fc4d81e"
+                length="1002314"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
