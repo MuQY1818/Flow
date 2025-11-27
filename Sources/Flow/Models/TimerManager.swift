@@ -127,6 +127,11 @@ class TimerManager: ObservableObject {
         state = .running
         endDate = Date().addingTimeInterval(timeRemaining)
         
+        // 专注模式开始时播放白噪音
+        if mode == .focus {
+            WhiteNoiseManager.shared.startNoise()
+        }
+        
         timer = Timer.publish(every: 0.1, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
@@ -139,6 +144,9 @@ class TimerManager: ObservableObject {
         
         timer?.cancel()
         state = .paused
+        
+        // 暂停时停止白噪音
+        WhiteNoiseManager.shared.stopNoise()
     }
     
     func reset() {
@@ -147,6 +155,9 @@ class TimerManager: ObservableObject {
         timeRemaining = currentDuration()
         progress = 1.0
         endDate = nil
+        
+        // 重置时停止白噪音
+        WhiteNoiseManager.shared.stopNoise()
     }
     
     func skip() {

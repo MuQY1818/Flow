@@ -2,19 +2,21 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var timerManager: TimerManager
+    @StateObject private var noiseManager = WhiteNoiseManager.shared
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 16) {
             Text("Settings")
                 .font(.headline)
             
             Divider()
             
+            // 时长设置
             Text("Durations (minutes)")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             
-            Grid(alignment: .leading, verticalSpacing: 12) {
+            Grid(alignment: .leading, verticalSpacing: 10) {
                 GridRow {
                     Text("Focus:")
                     TextField("25", value: $timerManager.focusDuration, formatter: NumberFormatter())
@@ -37,6 +39,33 @@ struct SettingsView: View {
             
             Divider()
             
+            // 白噪音设置
+            Text("White Noise")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            
+            HStack {
+                Picker("", selection: $noiseManager.currentNoise) {
+                    ForEach(NoiseType.allCases) { noise in
+                        Label(noise.rawValue, systemImage: noise.icon)
+                            .tag(noise)
+                    }
+                }
+                .pickerStyle(.menu)
+                .frame(width: 120)
+                
+                if noiseManager.currentNoise != .none {
+                    Slider(value: $noiseManager.volume, in: 0...1)
+                        .frame(width: 80)
+                    
+                    Image(systemName: noiseManager.isPlaying ? "speaker.wave.2.fill" : "speaker.slash")
+                        .foregroundColor(noiseManager.isPlaying ? .green : .gray)
+                        .font(.caption)
+                }
+            }
+            
+            Divider()
+            
             Toggle("Play Sound on Completion", isOn: $timerManager.isSoundEnabled)
             
             Spacer()
@@ -52,6 +81,6 @@ struct SettingsView: View {
             }
         }
         .padding()
-        .frame(width: 300, height: 380)
+        .frame(width: 300, height: 420)
     }
 }
