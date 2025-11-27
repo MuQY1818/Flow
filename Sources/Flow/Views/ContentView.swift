@@ -24,7 +24,8 @@ struct ContentView: View {
                             let isHovered = hoveredTab == tab
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.25)) {
+                                // 使用弹簧动画让背景滑动更丝滑
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
                                     selectedTab = tab
                                 }
                             } label: {
@@ -42,8 +43,9 @@ struct ContentView: View {
                                                 .fill(Color(white: 0.15))
                                         }
                                     }
-                                    .scaleEffect(isHovered && !isSelected ? 1.02 : 1.0)
-                                    .animation(.easeOut(duration: 0.12), value: isHovered)
+                                    .scaleEffect(isHovered && !isSelected ? 1.05 : 1.0)
+                                    // 绑定到具体的缩放条件，确保点击选中时的回缩动画也是轻快的
+                                    .animation(.spring(response: 0.25, dampingFraction: 0.65), value: isHovered && !isSelected)
                             }
                             .buttonStyle(.plain)
                             .onHover { h in hoveredTab = h ? tab : nil }
@@ -67,7 +69,7 @@ struct ContentView: View {
                             .background(quitHovered ? Color.red.opacity(0.15) : Color.clear)
                             .cornerRadius(6)
                             .scaleEffect(quitHovered ? 1.05 : 1.0)
-                            .animation(.easeOut(duration: 0.12), value: quitHovered)
+                            .animation(.spring(response: 0.25, dampingFraction: 0.65), value: quitHovered)
                     }
                     .buttonStyle(.plain)
                     .onHover { h in quitHovered = h }
@@ -169,7 +171,7 @@ struct TimerView: View {
                     .background(tagHovered ? Color(white: 0.2) : Color(white: 0.15))
                     .cornerRadius(12)
                     .scaleEffect(tagHovered ? 1.05 : 1.0)
-                    .animation(.easeOut(duration: 0.12), value: tagHovered)
+                    .animation(.spring(response: 0.25, dampingFraction: 0.65), value: tagHovered)
                 }
                 .menuStyle(.borderlessButton)
                 .onHover { h in tagHovered = h }
@@ -207,7 +209,7 @@ struct TimerView: View {
                     .cornerRadius(25)
                     .scaleEffect(mainButtonHovered ? 1.03 : 1.0)
                     .shadow(color: mainButtonHovered ? .white.opacity(0.3) : .clear, radius: 8)
-                    .animation(.easeOut(duration: 0.12), value: mainButtonHovered)
+                    .animation(.spring(response: 0.25, dampingFraction: 0.65), value: mainButtonHovered)
                 }
                 .buttonStyle(.plain)
                 .onHover { h in mainButtonHovered = h }
@@ -225,7 +227,7 @@ struct TimerView: View {
                         .background(skipHovered ? Color(white: 0.25) : Color(white: 0.15))
                         .cornerRadius(14)
                         .scaleEffect(skipHovered ? 1.05 : 1.0)
-                        .animation(.easeOut(duration: 0.12), value: skipHovered)
+                        .animation(.spring(response: 0.25, dampingFraction: 0.65), value: skipHovered)
                 }
                 .buttonStyle(.plain)
                 .onHover { h in skipHovered = h }
@@ -246,7 +248,7 @@ struct TimerView: View {
                     .background(settingsHovered ? Color(white: 0.25) : Color(white: 0.15))
                     .clipShape(Circle())
                     .scaleEffect(settingsHovered ? 1.1 : 1.0)
-                    .animation(.easeOut(duration: 0.12), value: settingsHovered)
+                    .animation(.spring(response: 0.25, dampingFraction: 0.65), value: settingsHovered)
             }
             .buttonStyle(.plain)
             .onHover { h in settingsHovered = h }
@@ -287,13 +289,10 @@ struct StatsView: View {
                         .background(leftArrowHovered ? Color.white.opacity(0.15) : Color.clear)
                         .cornerRadius(6)
                         .scaleEffect(leftArrowHovered ? 1.1 : 1.0)
+                        .animation(.spring(response: 0.25, dampingFraction: 0.65), value: leftArrowHovered)
                 }
                 .buttonStyle(.plain)
-                .onHover { hovering in
-                    withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
-                        leftArrowHovered = hovering
-                    }
-                }
+                .onHover { hovering in leftArrowHovered = hovering }
                 
                 Spacer()
                 
@@ -313,13 +312,10 @@ struct StatsView: View {
                         .background(rightArrowHovered ? Color.white.opacity(0.15) : Color.clear)
                         .cornerRadius(6)
                         .scaleEffect(rightArrowHovered ? 1.1 : 1.0)
+                        .animation(.spring(response: 0.25, dampingFraction: 0.65), value: rightArrowHovered)
                 }
                 .buttonStyle(.plain)
-                .onHover { hovering in
-                    withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
-                        rightArrowHovered = hovering
-                    }
-                }
+                .onHover { hovering in rightArrowHovered = hovering }
             }
             .padding(.horizontal, 30)
             .padding(.top, 5)

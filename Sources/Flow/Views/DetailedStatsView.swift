@@ -27,7 +27,7 @@ struct DetailedStatsView: View {
                         .background(closeHovered ? Color.white.opacity(0.2) : Color(white: 0.15))
                         .clipShape(Circle())
                         .scaleEffect(closeHovered ? 1.1 : 1.0)
-                        .animation(.easeOut(duration: 0.15), value: closeHovered)
+                        .animation(.spring(response: 0.25, dampingFraction: 0.65), value: closeHovered)
                 }
                 .buttonStyle(.plain)
                 .onHover { h in closeHovered = h }
@@ -623,7 +623,7 @@ struct StandaloneStatsView: View {
                             .background(leftArrowHovered ? Color.white.opacity(0.12) : Color.white.opacity(0.05))
                             .cornerRadius(10)
                             .scaleEffect(leftArrowHovered ? 1.08 : 1.0)
-                            .animation(.easeOut(duration: 0.15), value: leftArrowHovered)
+                            .animation(.spring(response: 0.25, dampingFraction: 0.65), value: leftArrowHovered)
                     }
                     .buttonStyle(.plain)
                     .onHover { h in leftArrowHovered = h }
@@ -646,7 +646,7 @@ struct StandaloneStatsView: View {
                             .background(rightArrowHovered ? Color.white.opacity(0.12) : Color.white.opacity(0.05))
                             .cornerRadius(10)
                             .scaleEffect(rightArrowHovered ? 1.08 : 1.0)
-                            .animation(.easeOut(duration: 0.15), value: rightArrowHovered)
+                            .animation(.spring(response: 0.25, dampingFraction: 0.65), value: rightArrowHovered)
                     }
                     .buttonStyle(.plain)
                     .onHover { h in rightArrowHovered = h }

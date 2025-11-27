@@ -148,7 +148,7 @@ struct StepperControl: View {
                     .frame(width: 20, height: 20)
                     .background(minusHovered ? Color.white.opacity(0.2) : Color(white: 0.2))
                     .cornerRadius(4)
-                    .animation(.easeOut(duration: 0.15), value: minusHovered)
+                    .animation(.spring(response: 0.25, dampingFraction: 0.65), value: minusHovered)
             }
             .buttonStyle(.plain)
             .onHover { h in minusHovered = h }
@@ -169,7 +169,7 @@ struct StepperControl: View {
                     .frame(width: 20, height: 20)
                     .background(plusHovered ? Color.white.opacity(0.2) : Color(white: 0.2))
                     .cornerRadius(4)
-                    .animation(.easeOut(duration: 0.15), value: plusHovered)
+                    .animation(.spring(response: 0.25, dampingFraction: 0.65), value: plusHovered)
             }
             .buttonStyle(.plain)
             .onHover { h in plusHovered = h }
@@ -201,12 +201,9 @@ struct HoverButton: View {
             .background(isHovered ? color.opacity(0.3) : color.opacity(0.1))
             .cornerRadius(8)
             .scaleEffect(isHovered ? 1.02 : 1.0)
+            .animation(.spring(response: 0.25, dampingFraction: 0.65), value: isHovered)
         }
         .buttonStyle(.plain)
-        .onHover { hovering in
-            withAnimation(.easeOut(duration: 0.15)) {
-                isHovered = hovering
-            }
-        }
+        .onHover { hovering in isHovered = hovering }
     }
 }

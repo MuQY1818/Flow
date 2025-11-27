@@ -11,11 +11,11 @@
 	<key>CFBundleName</key>
 	<string>Flow</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.7.0</string>
+	<string>1.7.1</string>
 	<key>CFBundleVersion</key>
-	<string>40</string>
+	<string>41</string>
 	<key>LSUIElement</key>
-	<false/>
+	<true/>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>SUAllowsAutomaticUpdates</key>
