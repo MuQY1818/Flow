@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.8.0</title>
+            <title>Flow 1.9.0</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>新增专注目标（One Thing）功能，让每次专注更有意义</p>
+                    <p>修复界面跳动、新增高级数据分享卡片（支持二维码）</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 21:58:33 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 22:07:02 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.8.0/Flow.app.zip"
-                sparkle:version="42"
-                sparkle:shortVersionString="1.8.0"
-                sparkle:sha256="68e21ed1d4ce2c912fe144fe8f090bd98d4f5b41be3f7414c7d54658ac99de1b"
-                length="1032586"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.9.0/Flow.app.zip"
+                sparkle:version="43"
+                sparkle:shortVersionString="1.9.0"
+                sparkle:sha256="4acc77445d596f690302620e5adab00f133be8cd3623b5d4b60ec4a80979ef25"
+                length="1077096"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>

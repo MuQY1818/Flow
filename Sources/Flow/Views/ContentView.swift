@@ -83,18 +83,21 @@ struct ContentView: View {
                     .foregroundColor(Color(white: 0.15))
                 
                 // Content Area
-                ZStack {
+                ZStack(alignment: .top) {
                     if selectedTab == "Controls" {
                         TimerView(showSettings: $showSettings)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .transition(.move(edge: .leading).combined(with: .opacity))
                             .zIndex(1)
                     } else {
                         StatsView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .transition(.move(edge: .trailing).combined(with: .opacity))
                             .zIndex(0)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .clipped() // Prevent content from bleeding during transition
             }
             
             // Settings Overlay
@@ -320,6 +323,9 @@ struct StatsView: View {
     @State private var rightArrowHovered = false
     @State private var showDetailedStats = false
     @State private var expandButtonHovered = false
+    @State private var showShareSheet = false
+    @State private var shareButtonHovered = false
+    @State private var copySuccess = false
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -392,31 +398,150 @@ struct StatsView: View {
                 Spacer()
             }
             
-            // 详细统计按钮（右下角）
-            Button {
-                showDetailedStats = true
-            } label: {
-                Image(systemName: "chart.bar.xaxis")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(expandButtonHovered ? .white : .gray)
-                    .frame(width: 36, height: 36)
-                    .background(expandButtonHovered ? Color.green.opacity(0.3) : Color(white: 0.15))
-                    .clipShape(Circle())
-                    .scaleEffect(expandButtonHovered ? 1.1 : 1.0)
-                    .animation(.easeOut(duration: 0.15), value: expandButtonHovered)
+            // Bottom Buttons
+            HStack(spacing: 12) {
+                // Share Button
+                Button {
+                    showShareSheet = true
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(shareButtonHovered ? .white : .gray)
+                        .frame(width: 36, height: 36)
+                        .background(shareButtonHovered ? Color.blue.opacity(0.3) : Color(white: 0.15))
+                        .clipShape(Circle())
+                        .scaleEffect(shareButtonHovered ? 1.1 : 1.0)
+                        .animation(.easeOut(duration: 0.15), value: shareButtonHovered)
+                }
+                .buttonStyle(.plain)
+                .onHover { h in shareButtonHovered = h }
+                
+                // Detailed Stats Button
+                Button {
+                    showDetailedStats = true
+                } label: {
+                    Image(systemName: "chart.bar.xaxis")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(expandButtonHovered ? .white : .gray)
+                        .frame(width: 36, height: 36)
+                        .background(expandButtonHovered ? Color.green.opacity(0.3) : Color(white: 0.15))
+                        .clipShape(Circle())
+                        .scaleEffect(expandButtonHovered ? 1.1 : 1.0)
+                        .animation(.easeOut(duration: 0.15), value: expandButtonHovered)
+                }
+                .buttonStyle(.plain)
+                .onHover { h in expandButtonHovered = h }
             }
-            .buttonStyle(.plain)
-            .onHover { h in expandButtonHovered = h }
             .padding(20)
+            
+            // Share Overlay
+            if showShareSheet {
+                ZStack {
+                    Color.black.opacity(0.8)
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture { showShareSheet = false }
+                    
+                    VStack(spacing: 20) {
+                        ShareCardView(
+                            dailyDuration: todayDuration,
+                            sessionCount: todaySessions.count
+                        )
+                        .environmentObject(timerManager)
+                        .shadow(color: .black.opacity(0.5), radius: 20, x: 0, y: 10)
+                        
+                        HStack(spacing: 16) {
+                            Button {
+                                copyToClipboard()
+                            } label: {
+                                HStack {
+                                    Image(systemName: copySuccess ? "checkmark" : "doc.on.doc")
+                                    Text(copySuccess ? "Copied!" : "Copy Image")
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.white.opacity(0.1))
+                                .cornerRadius(8)
+                            }
+                            .buttonStyle(.plain)
+                            
+                            Button {
+                                saveImage()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "square.and.arrow.down")
+                                    Text("Save Image")
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.white.opacity(0.1))
+                                .cornerRadius(8)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .transition(.scale.combined(with: .opacity))
+                }
+                .zIndex(10)
+            }
+        }
         .onChange(of: currentWeekStart) { _ in
             hoveredSummary = nil
-        }
-        
         }
         .onChange(of: showDetailedStats) { newValue in
             if newValue {
                 openDetailedStatsWindow()
                 showDetailedStats = false
+            }
+        }
+    }
+    
+    var todaySessions: [FocusSession] {
+        let calendar = Calendar.current
+        return timerManager.sessions.filter { calendar.isDateInToday($0.date) }
+    }
+    
+    var todayDuration: TimeInterval {
+        todaySessions.reduce(0) { $0 + $1.duration }
+    }
+    
+    func copyToClipboard() {
+        let cardView = ShareCardView(
+            dailyDuration: todayDuration,
+            sessionCount: todaySessions.count
+        ).environmentObject(timerManager)
+        
+        if let image = cardView.snapshot() {
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.writeObjects([image])
+            
+            withAnimation { copySuccess = true }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                copySuccess = false
+            }
+        }
+    }
+    
+    func saveImage() {
+        let cardView = ShareCardView(
+            dailyDuration: todayDuration,
+            sessionCount: todaySessions.count
+        ).environmentObject(timerManager)
+        
+        if let image = cardView.snapshot() {
+            let savePanel = NSSavePanel()
+            savePanel.allowedContentTypes = [.png]
+            savePanel.canCreateDirectories = true
+            savePanel.nameFieldStringValue = "Flow_Stats_\(Date().formatted(date: .numeric, time: .omitted)).png"
+            
+            savePanel.begin { response in
+                if response == .OK, let url = savePanel.url {
+                    if let tiffData = image.tiffRepresentation,
+                       let bitmapImage = NSBitmapImageRep(data: tiffData),
+                       let pngData = bitmapImage.representation(using: .png, properties: [:]) {
+                        try? pngData.write(to: url)
+                    }
+                }
             }
         }
     }
