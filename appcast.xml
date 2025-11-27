@@ -14,12 +14,12 @@
                     <p>隐藏Dock图标、修复统计窗口崩溃、全新高级统计界面设计</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 21:37:25 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 21:39:30 +0800</pubDate>
             <enclosure 
                 url="https://github.com/MuQY1818/Flow/releases/download/v1.7.0/Flow.app.zip"
-                sparkle:version="39"
+                sparkle:version="40"
                 sparkle:shortVersionString="1.7.0"
-                sparkle:sha256="fb73cfaa995f0c1be1ba26e4cff16b670cd54f345ec51428ae9761a650dfce24"
+                sparkle:sha256="b4392010781cfe65a150da31586b9a90682c64bc4b45ff7a69160a062979de16"
                 length="1023372"
                 type="application/octet-stream"
             />
