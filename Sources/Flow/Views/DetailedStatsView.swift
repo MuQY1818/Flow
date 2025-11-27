@@ -6,6 +6,9 @@ struct DetailedStatsView: View {
     @Binding var isPresented: Bool
     @State private var selectedPeriod: StatsPeriod = .week
     @State private var currentDate = Date()
+    @State private var closeHovered = false
+    @State private var leftArrowHovered = false
+    @State private var rightArrowHovered = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -17,54 +20,46 @@ struct DetailedStatsView: View {
                     }
                 } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.gray)
-                        .frame(width: 28, height: 28)
-                        .background(Color(white: 0.15))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(closeHovered ? .white : .gray)
+                        .frame(width: 26, height: 26)
+                        .background(closeHovered ? Color.white.opacity(0.2) : Color(white: 0.15))
                         .clipShape(Circle())
+                        .scaleEffect(closeHovered ? 1.1 : 1.0)
                 }
                 .buttonStyle(.plain)
+                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { closeHovered = h } }
                 
                 Spacer()
                 
                 Text("专注统计")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 17, weight: .semibold))
                 
                 Spacer()
                 
-                // 占位保持居中
-                Color.clear.frame(width: 28, height: 28)
+                Color.clear.frame(width: 26, height: 26)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 16)
-            .padding(.bottom, 12)
+            .padding(.horizontal, 24)
+            .padding(.top, 20)
+            .padding(.bottom, 16)
             
-            // 时间段选择器
-            HStack(spacing: 0) {
+            // 时间段选择器（带悬停效果）
+            HStack(spacing: 4) {
                 ForEach(StatsPeriod.allCases, id: \.self) { period in
-                    Button {
+                    PeriodButton(
+                        period: period,
+                        isSelected: selectedPeriod == period
+                    ) {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                             selectedPeriod = period
                         }
-                    } label: {
-                        Text(period.title)
-                            .font(.system(size: 13, weight: selectedPeriod == period ? .semibold : .regular))
-                            .foregroundColor(selectedPeriod == period ? .white : .gray)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                            .background(
-                                selectedPeriod == period ?
-                                Color.green.opacity(0.8) : Color.clear
-                            )
-                            .cornerRadius(8)
                     }
-                    .buttonStyle(.plain)
                 }
             }
             .padding(4)
-            .background(Color(white: 0.12))
+            .background(Color(white: 0.1))
             .cornerRadius(12)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 24)
             
             // 日期导航
             HStack {
@@ -72,15 +67,20 @@ struct DetailedStatsView: View {
                     navigateDate(by: -1)
                 } label: {
                     Image(systemName: "chevron.left")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.gray)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(leftArrowHovered ? .white : .gray)
+                        .frame(width: 32, height: 32)
+                        .background(leftArrowHovered ? Color.white.opacity(0.15) : Color.clear)
+                        .cornerRadius(8)
+                        .scaleEffect(leftArrowHovered ? 1.1 : 1.0)
                 }
                 .buttonStyle(.plain)
+                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { leftArrowHovered = h } }
                 
                 Spacer()
                 
                 Text(dateRangeText)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.system(size: 15, weight: .medium))
                     .foregroundColor(.white)
                 
                 Spacer()
@@ -89,13 +89,18 @@ struct DetailedStatsView: View {
                     navigateDate(by: 1)
                 } label: {
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.gray)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(rightArrowHovered ? .white : .gray)
+                        .frame(width: 32, height: 32)
+                        .background(rightArrowHovered ? Color.white.opacity(0.15) : Color.clear)
+                        .cornerRadius(8)
+                        .scaleEffect(rightArrowHovered ? 1.1 : 1.0)
                 }
                 .buttonStyle(.plain)
+                .onHover { h in withAnimation(.easeOut(duration: 0.15)) { rightArrowHovered = h } }
             }
             .padding(.horizontal, 24)
-            .padding(.vertical, 16)
+            .padding(.vertical, 12)
             
             // 统计卡片
             ScrollView(showsIndicators: false) {
@@ -179,8 +184,8 @@ struct DetailedStatsView: View {
                 .padding(.bottom, 20)
             }
         }
-        .frame(width: 320, height: 500)
-        .background(Color(red: 0.08, green: 0.08, blue: 0.1))
+        .frame(width: 400, height: 580)
+        .background(Color(red: 0.06, green: 0.06, blue: 0.08))
         .cornerRadius(20)
     }
     
@@ -345,6 +350,44 @@ enum StatsPeriod: CaseIterable {
         case .week: return "周"
         case .month: return "月"
         case .year: return "年"
+        }
+    }
+}
+
+/// 时间段按钮（带悬停效果）
+struct PeriodButton: View {
+    let period: StatsPeriod
+    let isSelected: Bool
+    let action: () -> Void
+    
+    @State private var isHovered = false
+    
+    var body: some View {
+        Button(action: action) {
+            Text(period.title)
+                .font(.system(size: 14, weight: isSelected ? .semibold : .medium))
+                .foregroundColor(isSelected ? .white : (isHovered ? .white.opacity(0.9) : .gray))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 10)
+                .background(
+                    Group {
+                        if isSelected {
+                            Color.green.opacity(0.85)
+                        } else if isHovered {
+                            Color.white.opacity(0.1)
+                        } else {
+                            Color.clear
+                        }
+                    }
+                )
+                .cornerRadius(8)
+                .scaleEffect(isHovered && !isSelected ? 1.02 : 1.0)
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            withAnimation(.easeOut(duration: 0.12)) {
+                isHovered = hovering
+            }
         }
     }
 }
