@@ -15,6 +15,7 @@ class UpdateManager: NSObject, ObservableObject {
     @Published var updateStatus: String = ""
     
     private var expectedSHA256: String?
+    private var changeLog: String?
     
     /// 检查更新
     func checkForUpdates() {
@@ -48,6 +49,9 @@ class UpdateManager: NSObject, ObservableObject {
                 // 解析 SHA256 哈希值
                 self?.expectedSHA256 = self?.parseXMLAttribute(xmlString, attribute: "sparkle:sha256")
                 
+                // 解析更新日志
+                self?.changeLog = self?.parseChangeLog(xmlString)
+                
                 if self?.compareVersions(current: currentVersion, latest: version) == .orderedAscending {
                     self?.updateAvailable = true
                     self?.showUpdateAlert(currentVersion: currentVersion, newVersion: version)
@@ -68,6 +72,34 @@ class UpdateManager: NSObject, ObservableObject {
         return String(xml[range.upperBound..<endRange.lowerBound])
     }
     
+    /// 解析更新日志
+    private func parseChangeLog(_ xml: String) -> String? {
+        // 查找 CDATA 内容
+        guard let startRange = xml.range(of: "<![CDATA["),
+              let endRange = xml.range(of: "]]>") else {
+            return nil
+        }
+        
+        let content = String(xml[startRange.upperBound..<endRange.lowerBound])
+        
+        // 清理 HTML 标签，提取纯文本
+        var text = content
+            .replacingOccurrences(of: "<h2>", with: "")
+            .replacingOccurrences(of: "</h2>", with: "\n")
+            .replacingOccurrences(of: "<p>", with: "")
+            .replacingOccurrences(of: "</p>", with: "")
+            .replacingOccurrences(of: "<br>", with: "\n")
+            .replacingOccurrences(of: "<br/>", with: "\n")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // 移除多余空行
+        while text.contains("\n\n\n") {
+            text = text.replacingOccurrences(of: "\n\n\n", with: "\n\n")
+        }
+        
+        return text.isEmpty ? nil : text
+    }
+    
     /// 比较版本号
     private func compareVersions(current: String, latest: String) -> ComparisonResult {
         return current.compare(latest, options: .numeric)
@@ -77,7 +109,17 @@ class UpdateManager: NSObject, ObservableObject {
     private func showUpdateAlert(currentVersion: String, newVersion: String) {
         let alert = NSAlert()
         alert.messageText = "发现新版本 v\(newVersion)"
-        alert.informativeText = "当前版本: v\(currentVersion)\n\n点击「更新」将自动下载并安装新版本。"
+        
+        var info = "当前版本: v\(currentVersion)"
+        
+        // 显示更新内容
+        if let log = changeLog {
+            info += "\n\n\(log)"
+        }
+        
+        info += "\n\n点击「更新」将自动下载并安装。"
+        
+        alert.informativeText = info
         alert.alertStyle = .informational
         alert.addButton(withTitle: "更新")
         alert.addButton(withTitle: "稍后")

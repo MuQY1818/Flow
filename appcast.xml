@@ -7,20 +7,20 @@
         <language>zh-cn</language>
         
         <item>
-            <title>Flow 1.3.9</title>
+            <title>Flow 1.4.0</title>
             <description>
                 <![CDATA[
                     <h2>🎉 更新内容</h2>
-                    <p>安全更新：SHA256校验、原子替换、动态路径</p>
+                    <p>更新弹窗显示更新内容</p>
                 ]]>
             </description>
-            <pubDate>Thu, 27 Nov 2025 13:53:58 +0800</pubDate>
+            <pubDate>Thu, 27 Nov 2025 13:57:44 +0800</pubDate>
             <enclosure 
-                url="https://github.com/MuQY1818/Flow/releases/download/v1.3.9/Flow.app.zip"
-                sparkle:version="24"
-                sparkle:shortVersionString="1.3.9"
-                sparkle:sha256="5ed3d84f6b058d43719eb5e25654e5203b357b8f57cb1a8911eb7b925d71eb40"
-                length="903278"
+                url="https://github.com/MuQY1818/Flow/releases/download/v1.4.0/Flow.app.zip"
+                sparkle:version="25"
+                sparkle:shortVersionString="1.4.0"
+                sparkle:sha256="309f2cdf1de590fd75ce468f696030618ded1316dc6495400d0857f09316db9f"
+                length="904227"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
